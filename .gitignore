@@ -1,0 +1,9 @@
+.vscode
+coursera-cs400
+*.o
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+*.d
