@@ -466,7 +466,7 @@ Cube::Cube(double length) {
 }
 ...
 // Executable: main.cpp
-uiuc::Cube c(2); // The costom constructor with argument double is and executed
+uiuc::Cube c(2); // The costom constructor with argument double is executed
 std::cout << Volume << c.getVolume() << std::endl; // 2^3 = 8
 ```
 
@@ -564,7 +564,7 @@ Cube& Cube::operator=(const Cube& c) {
 
 ### Variable Storage: Creating, Passing and Returning by Value / Reference / Pointer
 
-- In C++, an instanbce of a variable can be stored in 3 was
+- In C++, an instance of a variable can be stored in 3 ways
     - stored directly in memory
     - accessed by a pointer
     - accessed by a reference
@@ -580,7 +580,7 @@ uiuc::HSLAPixel p;
 // 2. Storage by pointer
 // - Type is modified with *
 // - A pointer takes a "memory address width" = 64 bits in 64B systems
-// - The pointer points to the alölocated space of the object
+// - The pointer points to the allocated space of the object
 Cube* c; // Pointer to Cube
 int* i; // Pointer to int
 uiux::HSLAPixel* p;
@@ -647,7 +647,7 @@ sendCubePointer(&c);
 
 ### Class Destructor
 
-- Class destructors are called at the end of te lifecycle of the class and they clean up the memory allocated to the class instance
+- Class destructors are called at the end of the lifecycle of the class and they clean up the memory allocated to the class instance
 - There is an **automatic default destructor** provided if we do nothing
     - The only action by it is to call the default destructor of all member objects
     - So, if we want some logging or additional clean-up (e.g., free heap memory with `delete`), we need our custom destructor
@@ -961,23 +961,23 @@ void Game::_move(unsigned index1, unsigned index2) {
 
 Another approach for solving the problem consists in designing a broader strategy rather than obtaining by induction. The master plan would look like this:
 
-- We want to transfer the cubes from stack 0 (left) to stack 2 (right), following the rule having a smaller cube on top of a bigger at any moment.
+- We want to transfer the cubes from stack 0 (left) to stack 2 (right), following the rule of having a smaller cube on top of a bigger at any moment.
 - If we have 4 cubes stacked in stack 0, we want to
     1. transfer the top 3 to a spare stack (1) temporarily
     2. transfer the bottom biggest cube to the stack 2
     3. transfer the top 3 from the spare stack (1) to final stack 2
 
-- We notice that the stack can be separated in layers from bottom to top; deeper layers can be ignored while working  on top ones - thus, we simplify th eproblem to the top sub-towers and work recursively
-- The 3 stacks are leballed to be `Source`, `Spare`, `Target`, and each time, each of the `Source` and `Spare` labels are re-assigned to different stacks
+- We notice that the stack can be separated in layers from bottom to top; deeper layers can be ignored while working on top ones - thus, we simplify the problem to the top sub-towers and work recursively
+- The 3 stacks are labelled to be `Source`, `Spare`, `Target`, and each time, each of the `Source` and `Spare` labels are re-assigned to different stacks
 
-The generic recursion pseudocode is the following:
+The generic recursion pseudo-code is the following:
 ```
 Initial state:
 Stacks 0, 1, 2 = Source, Spare, Target
 Blocks in Source: 0, 1, 2, 3
 
 move(Source[0,1,2,3] -> Target (Stack 2))
-    move(Source[1,2,3] -> Spare (Stack 1)) // We sawp Spare & Target
+    move(Source[1,2,3] -> Spare (Stack 1)) // We swap Spare & Target
         here, we recursively call move():
         move(Source[2,3] -> Spare)
             ...
@@ -989,7 +989,7 @@ move(Source[0,1,2,3] -> Target (Stack 2))
         recursion, again
 
 move(Source[start,...,end] -> Target)
-    move(Source[start+1,...,end] -> Spare) // We sawp Spare & Target
+    move(Source[start+1,...,end] -> Spare) // We swap Spare & Target
     move(Source[start] -> Target)
     move(Spare[start+1,...,end] -> Target)
 
@@ -1059,12 +1059,12 @@ my_max(Cube(4), Cube(7));
 ### Inheritance
 
 - We can generate generic classes which are then inherited by more specific classes, e.g. `Shape -> Cube`; we call them **base** class and **derived** class
-- Base classes have all member variables and methods declarations that are share by all derived ones.
+- Base classes have all member variables and method declarations that are shared by all derived ones.
 - Usually public inheritance is done: `class Cube : public Shape { ... }`: the derived class
     - can access all **public** members (variables & methods) of the base class
     - cannot access the **private** members of the base class
 
-- When a derived class is initilized, the derived class **must** construct the base class:
+- When a derived class is initialized, the derived class **must** construct the base class:
     - `Cube` must construct `Shape`
     - Default constructor is used by default
     - Custom constructor can be used with an **initialization list**
@@ -1142,7 +1142,7 @@ namespace uiuc {
 ```
 ### Week 4 Assignment
 
-The assignment code ans instructions are in `week_4_assignment/`.
+The assignment code and instructions are in `week_4_assignment/`.
 Files that need to be edited and submitted:
 
 - `ImageTransform.h`
@@ -1150,7 +1150,7 @@ Files that need to be edited and submitted:
 - `uiuc/HSLAPixel.h`
 - `uiuc/HSLAPixel.cpp`
 
-The project consists in loading and processing/transforming a PNG image. The PNG handling library code is probided in `uiuc/PNG.h/cpp` and `uiuc/lodepng/lodepng.h/cpp`.
+The project consists in loading and processing/transforming a PNG image. The PNG handling library code is provided in `uiuc/PNG.h/cpp` and `uiuc/lodepng/lodepng.h/cpp`.
 
 #### Part 1: Color Spaces
 

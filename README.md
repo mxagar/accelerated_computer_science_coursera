@@ -12,7 +12,9 @@ This Coursera Specialization is divided into 3 courses, each one contained in a 
     - Memory model: pointers (*, &), heap (persistent / low), stack (non-persistent / high)
     - Links/aliases: &
     - Scope (blocks)
-    - Classes: types of constructors & destructor
+    - Classes: types of constructors & destructors
+    - Modern `for` loops
+    - Unsigned integers
     - Templates
 
 2. [Ordered Data Structures in C++](https://www.coursera.org/learn/cs-fundamentals-2?specialization=cs-fundamentals): `02_Ordered_DS`
