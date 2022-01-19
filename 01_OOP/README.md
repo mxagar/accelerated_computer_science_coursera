@@ -694,6 +694,12 @@ int main() {
     - Clean open files
     - Manage shared memory
 
+### Summary of Types of Constructors & Destructors
+
+The following table, along with the file `./pics/constructors_summary_table.pdf` summarize the types of constructors and destructors we have available: 
+
+![Summary of Types of Constructors & Destructors](./pics/constructors_summary_table.png)
+
 ### Errors due to Missuse of Pointers
 
 - **Segmentation fault** (Unix) occurs when we access a restricted memory part
