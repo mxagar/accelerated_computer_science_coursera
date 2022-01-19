@@ -7,3 +7,4 @@ coursera-cs400
 *.dll
 *.exe
 *.d
+.DS_Store
