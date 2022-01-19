@@ -3,6 +3,39 @@
 Notes made when following the course offered in Coursera by University of Illinois at Urbana-Champaign.
 Prof. Wade Fagen-Ulmschneider. This course is 1/3 in the 'Accelerated Computer Science Fundamentals Specialization'.
 
+Overview:
+1. Week 1: Introduction to Writing C++ Programs
+   - 1.1 Introduction
+   - 1.2 C++ Classes
+   - 1.3 C++ Standard Library: STD / STL
+2. Week 2: C++ Memory Model
+   - 2.1 Stack Memory and Pointers
+   - 2.2 Heap Memory
+   - 2.3 Heap Memory Puzzels
+   - 2.4 Additional Notes
+3. Week 3: C++ Classes
+   - 3.1 Copy Constructors
+   - 3.2 Copy Assignment Operator `=`
+   - 3.3 Summary of Constructor and Copying Functions
+   - 3.4 Variable Storage: Creating, Passing and Returning by Value / Reference / Pointer
+   - 3.5 Class Destructor
+   - 3.6 Summary of Types of Constructors & Destructors
+   - 3.7 Errors due to Missuse of Pointers
+   - 3.8 Modern Range-based `for`-Loops
+   - 3.9 Unsigned Integers
+4. Week 4: C++ Software Solutions: Templates, Class Inheritance
+   - 4.1 Tower of Hanoi: Game Explanation
+   - 4.2 Tower of Hanoi: Solution 1
+   - 4.3 Tower of Hanoi: Solution 2
+   - 4.4 Templates
+   - 4.5 Inheritance
+   - 4.6 Week 4 Assignment
+5. General Notes on Classes (Excurs)
+   - Object-Oriented Programming in C++
+   - Polymorphism
+   - Additional Glossary
+
+
 ## Week 1: Introduction to Writing C++ Programs
 
 ### 1.1 Introduction
@@ -286,7 +319,7 @@ int main() {
 
 - See `cpp-heapMemory/heap2.cpp` for another point: What happens when we try to delete heap memory parts that have been already deleted?
 
-### Heap Memory Puzzels
+### 2.3 Heap Memory Puzzels
 
 Puzzle 1: `cpp-heapPuzzles/puzzle1.cpp`:
 
@@ -357,7 +390,7 @@ Puzzle 4: `cpp-heapPuzzles/puzzle4.cpp`: **arrays** in the heap
   delete[] x; // since x points to a sequence, all sequence must be de-allocated
 ```
 
-### Additional notes
+### 2.4 Additional Notes
 
 - Comments: `// Single line`, `/* Multi-line */`
 - Header and source files: declarations and implementation
@@ -472,7 +505,7 @@ std::cout << Volume << c.getVolume() << std::endl; // 2^3 = 8
 
 - See examples in `cpp-ctor`: `ex1`, `ex2`, `ex3`
 
-### Copy Constructors
+### 3.1 Copy Constructors
 
 - If we do not provide any copy constructor, an **automatic copy constructor** is created implicitly for us; it copies all variables, which can be good and bad -- bad (1) if no copy operator is defined for all member variables, or (2) if want to control how copy is made, or (3) if we want to share resources between objects.
 
@@ -528,7 +561,7 @@ Cube c3; // Default constructor
 // See next section on the copy assignment operator =
 c3 = c1; 
 ```
-### Copy Assignment Operator `=`
+### 3.2 Copy Assignment Operator `=`
 
 - Whereas a copy constructor creates a new object, the copy assignment operator assigns or replaces values to an existing object; in other words, the copy assignment operator `=` is always called on objects that have previously been created.
 - Again, if not manually defined, C++ provides us with an **automatic assignment operator** `=`
@@ -553,7 +586,7 @@ Cube& Cube::operator=(const Cube& c) {
 }
 ```
 
-### Summary of Constructor and Copying Functions
+### 3.3 Summary of Constructor and Copying Functions
 
 - We have three automatically generated functions (i.e., compiled even if no code is explicitly present)
     - Automatic default constructor: `Cube::Cube()`
@@ -562,7 +595,7 @@ Cube& Cube::operator=(const Cube& c) {
 - All three are invoked in several stages of object instatiation and copy
 - All three can be manually overloaded and defined; in that case, they are not automatic
 
-### Variable Storage: Creating, Passing and Returning by Value / Reference / Pointer
+### 3.4 Variable Storage: Creating, Passing and Returning by Value / Reference / Pointer
 
 - In C++, an instance of a variable can be stored in 3 ways
     - stored directly in memory
@@ -645,7 +678,7 @@ sendCubePointer(&c);
     - return by pointer: modified with `*`
     - return by reference: `&`; **BUT: never return a reference to a stack vaiable created on the stact of your current function, because it will be destroyed when leaving the function!**
 
-### Class Destructor
+### 3.5 Class Destructor
 
 - Class destructors are called at the end of the lifecycle of the class and they clean up the memory allocated to the class instance
 - There is an **automatic default destructor** provided if we do nothing
@@ -694,13 +727,13 @@ int main() {
     - Clean open files
     - Manage shared memory
 
-### Summary of Types of Constructors & Destructors
+### 3.6 Summary of Types of Constructors & Destructors
 
 The following table, along with the file `./pics/constructors_summary_table.pdf` summarize the types of constructors and destructors we have available: 
 
 ![Summary of Types of Constructors & Destructors](./pics/constructors_summary_table.png)
 
-### Errors due to Missuse of Pointers
+### 3.7 Errors due to Missuse of Pointers
 
 - **Segmentation fault** (Unix) occurs when we access a restricted memory part
 
@@ -757,7 +790,7 @@ delete x;
 x = nullptr;
 ```
 
-### Modern Range-based `for`-Loops
+### 3.8 Modern Range-based `for`-Loops
 
 ```c++
 std::vector<int> int_list;
@@ -783,7 +816,7 @@ for (const int& x : int_list) {
 }
 ```
 
-### Unsigned Integers
+### 3.9 Unsigned Integers
 
 - Unsigned `ints` have no negative values, instead, double the positive values.
 - The underlying bit representation is the same for both, therefore, a negative signed `int` can be interpreted as a very large `unsigned int`, or vice versa (so negative values have higher bit values)
@@ -845,7 +878,7 @@ v.size(); // get number of elements
 v[0]; // access element # 0 for rw
 ```
 
-### Tower of Hanoi: Game Explanation
+### 4.1 Tower of Hanoi: Game Explanation
 
 Problem description:
 
@@ -905,7 +938,7 @@ class Game {
     std::vector<Stack> stacks_;
 };
 ```
-### Tower of Hanoi: Solution 1
+### 4.2 Tower of Hanoi: Solution 1
 
 Game strategy: if we look closely at the movements that need to be taken, we see that the following sequence is repeated:
 
@@ -963,7 +996,7 @@ void Game::_move(unsigned index1, unsigned index2) {
 }
 ```
 
-### Tower of Hanoi: Solution 2
+### 4.3 Tower of Hanoi: Solution 2
 
 Another approach for solving the problem consists in designing a broader strategy rather than obtaining by induction. The master plan would look like this:
 
@@ -1026,7 +1059,7 @@ void Game::_move(
 }
 ```
 
-### Templates
+### 4.4 Templates
 
 C++ allows creating template functions and classes, which are basically objects that have parameters of types defined at another point in code.
 
@@ -1062,7 +1095,7 @@ my_max(Cube(4), Cube(7));
 
 ```
 
-### Inheritance
+### 4.5 Inheritance
 
 - We can generate generic classes which are then inherited by more specific classes, e.g. `Shape -> Cube`; we call them **base** class and **derived** class
 - Base classes have all member variables and method declarations that are shared by all derived ones.
@@ -1146,7 +1179,7 @@ namespace uiuc {
   }
 }
 ```
-### Week 4 Assignment
+### 4.6 Week 4 Assignment
 
 The assignment code and instructions are in `week_4_assignment/`.
 Files that need to be edited and submitted:
@@ -1287,7 +1320,7 @@ PNG watermark(PNG firstImage, PNG secondImage) {
 ```
 
 
-## General Notes on Classes
+## 5. General Notes on Classes
 
 I made these notes while reading the C++ tutorial from `cplusplus.com` (not while doing the Coursera course).
 Extensive examples are in `~/git_repositories/templates/c++/cpp_tutorial`.
