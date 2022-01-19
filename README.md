@@ -15,6 +15,7 @@ This Coursera Specialization is divided into 3 courses, each one contained in a 
     - Classes: types of constructors & destructors
     - Modern `for` loops
     - Unsigned integers
+    - Tower of Hanoi
     - Templates
 
 2. [Ordered Data Structures in C++](https://www.coursera.org/learn/cs-fundamentals-2?specialization=cs-fundamentals): `02_Ordered_DS`

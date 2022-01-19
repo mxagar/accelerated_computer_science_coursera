@@ -1158,7 +1158,7 @@ The project consists in loading and processing/transforming a PNG image. The PNG
     - H, Hue: color itself, 0-360 degrees, rainbow order: red - yellow - green - cyan - blue - magenta - red
     - S, Saturation: degree to which the hue differs from a neutral gray: 0 (no color saturation; gray) - 100 (full)
     - L, Luminance: level of illumination: 100 (white, full illumination) - 0 (black, no illumination)
-- Addiiotional channel Alpha used for blending colors (tranparency/opacity)
+- Additional channel Alpha used for blending colors (transparency/opacity)
 - HSL color space is like a 3D ellipsoid
 
 Task: implement `HSLAPixel` class in `uiuc/HSLAPixel.h`:
@@ -1191,7 +1191,7 @@ PNG grayscale(PNG image)
 // pixel.s = 0
 ```
 
-Task: finish implementing in `ImageTransform.cpp` the functions `illinify`, `sporlight` and `watermark`.
+Task: finish implementing in `ImageTransform.cpp` the functions `illinify`, `spotlight` and `watermark`.
 Solutions:
 
 ```c++
@@ -1284,11 +1284,11 @@ PNG watermark(PNG firstImage, PNG secondImage) {
 ## General Notes on Classes
 
 I made these notes while reading the C++ tutorial from `cplusplus.com` (not while doing the Coursera course).
-Extensive examples are in `templates/c++/cpp_tutorial`.
+Extensive examples are in `~/git_repositories/templates/c++/cpp_tutorial`.
 
 ### Object-Oriented Programming in C++
 
-- Data is structured complex in classes which embed member variables (information) and methods to process that information
+- Data is structured in complex classes which embed member variables (information) and methods to process that information
 - Classes are structs with extended characteristics:
   - they hold member variables (attributes) and methods/functions
   - they can be inherited to form new classes
@@ -1299,10 +1299,10 @@ Extensive examples are in `templates/c++/cpp_tutorial`.
     - protected: like PRIVATE, but members also accessible from members of DERIVED classes
     - public: members accessible from ANYWHERE, even from outside
 - An object is an instantiation of a class; a class is a new type, user-defined
-- Use ';' always after a class definition - BUT method implementations dont need ';'
+- Use ';' always after a class definition - BUT method implementations don't need ';'
 - About the member variables and methods
   - accessed/assigned with '.' with instantiated objects, with '->' if pointers to an object
-  - operator scope '::' used in function/method implementation: `type ClasName::method_name(...) {...}`
+  - operator scope '::' used in function/method implementation: `type ClassName::method_name(...) {...}`
   - function/method implementation can be in class definition or somewhere else (e.g., same file, or another file)
     - if implemented in definition, compiler considers it `inline`
 - Constructors and Destructors
@@ -1314,13 +1314,13 @@ Extensive examples are in `templates/c++/cpp_tutorial`.
   - Destructors
     - Same name as class preceded by `~`, **NO TYPE**
     - Dynamic memory (heap) freed up here with `delete` (and consider using `nullptr` afterwards)
-  - Default: 4 things are done automatically by the compiler if programmer doesnt take care of them
+  - Default: 4 things are done automatically by the compiler if programmer doesn't take care of them
     - If nothing explicitly declared/defined, compiler implements implicitly
-      - (NOT ALWAYS) A default constructor ClassName(): **THIS IS AKA DEFAULT CONSTRUCTOR OR CONSTRUCTOR WITHOUT PARAMETERS**. Only if no other custom constructor is declared/defined; if a custom constructor is declared/defined, this default must be declared/defined manually. Example: `ClassName::ClassName() {m_variable = 0;}`
-      - (ALWAYS) A default destructor `~ClassName()`
-      - (ALWAYS) A default copy constructor that copies all member variables: `ClassName c1; ClassName c2(c1);`. Example: `ClassName::ClassName(const ClassName& rv) {m_variable = rv.m_variable;}`
-      - (ALWAYS) A default copy assignment operator (=) that copies all member variables: `ClassName c1; ClassName c2 = c1;`. Example: `ClassName& ClassName::operator= (const ClassName& rv) {m_variable = rv.m_variable; return *this;}`
-    - If any default constructor/destructor is explicitly declared/defined, its implicit default definition/implementation is not performed by the compiler. Therefore, **IMPORTANT**:
+      - (NOT ALWAYS) An automatic default constructor ClassName(): **THIS IS AKA DEFAULT CONSTRUCTOR OR CONSTRUCTOR WITHOUT PARAMETERS**. Only if no other custom constructor is declared/defined; if a custom constructor is declared/defined, this default must be declared/defined manually. Example: `ClassName::ClassName() {m_variable = 0;}`
+      - (ALWAYS) An automatic default destructor `~ClassName()`
+      - (ALWAYS) An automatic copy constructor that copies all member variables: `ClassName c1; ClassName c2(c1);`. Example: `ClassName::ClassName(const ClassName& rv) {m_variable = rv.m_variable;}`
+      - (ALWAYS) An automatic copy assignment operator (=) that copies all member variables: `ClassName c1; ClassName c2 = c1;`. Example: `ClassName& ClassName::operator= (const ClassName& rv) {m_variable = rv.m_variable; return *this;}`
+    - If any automatic constructor/destructor is explicitly declared/defined, its implicit default definition/implementation is not performed by the compiler. Therefore, **IMPORTANT**:
       - if we create a custom constructor, we need to create also the default `ClassName()` constructor (at least, try to initialize variables with 0)
       - it is not necessary to do that for the copy / assignment constructor
 - Operators can be overloaded to perform class specific tasks
@@ -1411,7 +1411,7 @@ Extensive examples are in `templates/c++/cpp_tutorial`.
   - Pure virtual functions
     - Virtual functions that have no implementation and are re-defined in derived children
     - For creating them: `virtual function_prototype = 0;`
-    - A base class with at least one pure virtual function is a ABSTRACT CLASS or an INTERFACE: it cannot be instantiated as an object, only as a POINTER
+    - A base class with at least one pure virtual function is an ABSTRACT CLASS or an INTERFACE: it cannot be instantiated as an object, only as a POINTER
 
 ### Additional Glossary
 
