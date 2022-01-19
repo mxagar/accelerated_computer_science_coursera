@@ -1,13 +1,32 @@
 # Ordered Data Structures in C++
 
 Notes made when following the course offered in Coursera by University of Illinois at Urbana-Champaign.
-Prof. Wade Fagen-Ulmschneider. This course is 2/3 in the 'Accelerated Computer Science Fundamentals Specialization'.
+Prof. Wade Fagen-Ulmschneider. This course is 2/3 in the ['Accelerated Computer Science Fundamentals Specialization'](https://www.coursera.org/specializations/cs-fundamentals).
 
-Overview: 
+I have forked the orginal repository to my Github account; additionally, I use the material from the course and the original repository on this repository.
+
+Original repository: [wadefagen/coursera](https://github.com/wadefagen/coursera).
+My repository, forked from the original: [mxagar/coursera-cs400](https://github.com/mxagar/coursera-cs400).
+Repository of the current notes: [mxagar/accelerated_computer_science_coursera](https://github.com/mxagar/accelerated_computer_science_coursera).
+
+Overview of contents: 
 
 1. Week 1: Linear Structures
-   - 1.1 Array
-   - 
+   - 1.1 Arrays
+   - 1.2 Lists = Linked Memory
+   - 1.3 Run Time Analysis: Access, Insert
+   - 1.4 Array and List Operations: Find, Insert After
+   - 1.5 Queue (Data Structure)
+   - 1.6 Stack (Data Structure)
+   - 1.7 Week 1 Assignment: Linked Lists and Merge Sort
+2. Week 2: Binary (Search) Trees
+   - 2.1 Tree Terminology
+   - 2.2 Binary Trees
+   - 2.3 Tree Traversals
+   - 2.4 Binary Search Trees (BST)
+   - 2.5 BST Analysis
+
+
 ## Week 1: Linear Structures
 
 ### 1.1 Arrays
@@ -269,7 +288,7 @@ s.push( "Illini" );
 std::cout << "Second pop(): " << s.top() << std::endl; // Illini
 ```
 
-### Week 1 Assignment: Linked Lists and Merge Sort
+### 1.7 Week 1 Assignment: Linked Lists and Merge Sort
 
 See `week_1_assignment/README.md`.
 

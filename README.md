@@ -4,6 +4,13 @@ This repository contains the notes I made when following this Specialization off
 
 [Accelerated Computer Science Fundamentals](https://www.coursera.org/specializations/cs-fundamentals)
 
+I have forked the orginal repository to my Github account; additionally, I use the material from the course and the original repository on this repository.
+
+Original repository: [wadefagen/coursera](https://github.com/wadefagen/coursera).
+My repository, forked from the original: [mxagar/coursera-cs400](https://github.com/mxagar/coursera-cs400).
+Repository of the current notes: [mxagar/accelerated_computer_science_coursera](https://github.com/mxagar/accelerated_computer_science_coursera).
+
+
 This Coursera Specialization is divided into 3 courses, each one contained in a specific folder:
 
 1. [Object Oriented Data Structures in C++](https://www.coursera.org/learn/cs-fundamentals-1?specialization=cs-fundamentals): `01_OOP`
