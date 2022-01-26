@@ -230,7 +230,7 @@ void List<T>::insertAtFront(const T & data) {
         - We need to keep track of an index of where we should be removing from the queue
         - Adding elements is pushing to the array
         - The first elements of the array have the priority to be popped
-            - Although be might not pop, but just modify the front index
+            - Although we might not pop, but just modify the front index
         - All operations are $O(1)$: `create`, `push`, `pop`, `empty`
             - But: `push` and `pop` are $O(1)$ in amortized runtime, assuming capacity is doubled when exceeded
     - List implementation
@@ -241,6 +241,7 @@ void List<T>::insertAtFront(const T & data) {
         - Every time we `pop`, we remove and update the `tail_` by using the backward pointer
         - All operations are $O(1)$: `create`, `push`, `pop`, `empty`
 
+![Queue runtime analysis](./pics/queue_operations_runtime.png)
 
 There is a `std::queue<type>` in the STL. Example from `queue/main.cpp`:
 ```c++
@@ -261,21 +262,23 @@ std::cout << "Second pop(): " << q.front() << std::endl; // Blue
 
 - **LIFO** array/list: Last In First Out; it mimicks a pile of dishes/papers
 - Abstract Data Type (ADT) description of a Sueue, all $O(1)$:
-    - `create`: create an emty queue
+    - `create`: create an empty stack
     - `push`: add data to the top of the stack
     - `pop`: remove data from the top of the stack
     - `empty`: return true if stack is empty
 - A stack can be built with any type of collection, array/list:
     - Array-based
-        - We insert bacwards from n to 0; when we arrive 0, the array is expanded
+        - We insert backwards from n to 0; when we arrive 0, the array is expanded
         - A counters/index is kept for the last inserted element position
-        - If we pop, the element on the front (index previous to the insert conter) is removed
+        - If we pop, the element on the front (index previous to the insert counter) is removed
     - List-based: it's even easier
         - We insert at the front with `push`,
         - We remove from the frot with `pop`, and update the `head_` pointer
         - Nothing new/additional is required
     - All operations are $O(1)$: `create`, `push`, `pop`, `empty`
         - But for the array-based version, `push` and `pop` are $O(1)$ in amortized runtime, assuming capacity is doubled when exceeded
+
+![Stack runtime analysis](./pics/stack_operations_runtime.png)
 
 There is a `std::stack<type>` in the STL. Example from `stack/main.cpp`:
 ```c++
