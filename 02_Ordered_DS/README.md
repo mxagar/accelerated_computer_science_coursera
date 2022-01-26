@@ -33,13 +33,13 @@ Overview of contents:
 
 - An array stores data sequentially: elements are stored one after the other, increasing the memory addresses (thus, also indices) one unit at a time
 - Limitations of arrays
-    - All elements of the same type
+    1. All elements of the same type
         - The size of the type is known (in bytes); that makes possible to calculate the offset to any given index. Thus, we don't need to navigate through all elements ($O(n)$), but we have direct access to each element ($O(1)$)
-    - Arrays have a fixed capacity
+    2. Arrays have a fixed capacity
         - Capacity: maximum number of elements
         - Elements are stored sequentially in a memory block
         - If we exceed the capacity, we need to allocate a new larger chunk of memory and we need to copy the data over from the previous block to the new
-        - However, the `std::vector` does that automatically; therefore, for the user, an `std::vector` is an array which dynamically gorws in size, eventhough internally resizing and memory allocation happpens if we exceed the initial capacity
+        - However, the `std::vector` does that automatically; therefore, for the user, an `std::vector` is an array which dynamically grows in size, even though internally resizing and memory allocation happens if we exceed the initial capacity
 
 Examples `array/ex2/main.cpp` and `array/ex3/main.cpp`:
 ```c++
@@ -73,7 +73,7 @@ std::cout << "Capacity after adding: " << cubes.capacity() << std::endl; // 3x2 
 // Compute the offset from the beginning of the array to [2] and [3]
 std::cout << "Size of cube element: " << sizeof(cubes[0]) << std::endl; // 8 bytes
 int offset1 = (long)&(cubes[2]) - (long)&(cubes[0]); // 2 x 8
-int offset2 = (long)&(cubes[3]) - (long)&(cubes[0]); // 3 x 8 -> they are sequantially stored!
+int offset2 = (long)&(cubes[3]) - (long)&(cubes[0]); // 3 x 8 -> they are sequentially stored!
 ```
 
 ### 1.2 Lists = Linked Memory
@@ -81,6 +81,8 @@ int offset2 = (long)&(cubes[3]) - (long)&(cubes[0]); // 3 x 8 -> they are sequan
 - Linked memory lists store data elements together with a link/pointer to the location in memory of the next list node. So basically we have
     - **List nodes**: element (data) + pointer to next node
     - **Linked list** itself: set of list nodes; a head pointer (e.g., `head_`) marks the memory location where the list begins, `nullptr` marks the end of the list (the pointer to the next element of the last element is `nullptr`)
+
+![Linked list](./pics/linked_list.png)
 
 A **list node** is defined with data + pointer to the next node, as shown in `linked-memory/List.h`:
 ```c++
@@ -117,7 +119,7 @@ class List {
     - Now, if want the element in `[4]` we need to visit all previous elements before it, in chain. So here we have $O(n)$ complexity.
     - Now we can insert an element between other two elements. Usually, new elements are inserted at the front, since that requires basically creating a new node and changing the head pointer.
     - In a list, the capacity is bounded to the available (heap) memory of the system; we don't need to resize as we needed with the array
-    - Both arrays and lists contain elements of the same type
+    - **Both arrays and lists contain elements of the same type**
     - Summary: lists are more flexible than arrays, but with runtime disadvantages
 
 
@@ -203,10 +205,12 @@ void List<T>::insertAtFront(const T & data) {
         - This way, we check only half of the branch each time: `log2(n)` checks performed: $O(log2(n))$
         - This is called **binary serach**
     - For the lists, no binary search is possible: all lists have $O(n)$ find complexity
-- Last operation: **insert after**
+- Last operation: **insert/delete after**
     - Given an index `i`, insert element fater it
     - With an array we need to move all data after `i`; worst case, we need to move all `n` elements -> $O(n)$
     - With a list, we just need to change the pointer of element `i` -> $O(1)$
+
+![Runtime of arrays and lists](./pics/runtime_array_list.jpeg)
 
 - Conclusions
     - Arrays and linked memory lists are the basis for other data structures built on top of them
