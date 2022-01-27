@@ -301,6 +301,9 @@ See `week_1_assignment/README.md`.
 
 #### `const` correctness
 
+**Very important topic.**
+See also this **very useful link**: [Const-Correctness](https://isocpp.org/wiki/faq/const-correctness).
+
 ```c++
 // if a function name is continued by const
 // it implies no data is changed within it
@@ -311,18 +314,89 @@ bool LinkedList<T>::empty() const { return !head_; }
 T& LinkedList<T>::front() { return head_->data; }
 
 // here, we pass a link/reference to a function
-// with const, we force it to remein unchanged
+// with const, we force it to remain unchanged
 void function(const T& data);
 // without const, we could change data inside
 void function(T& data);
 
-// in case we want to pass to another function a LInkedList as const reference: const LinkedList<T>& myList
+// in case we want to pass to another function a LinkedList as const reference: const LinkedList<T>& myList
 // we need to overload LinkedList's (public) member functions
 // with a const function + const return version
 const T& LinkedList<T>::front() const { return head_->data; }
 
 // Always use const after the function name if it does not change anything!
 ```
+
+Some notes after going through the [Const-Correctness](https://isocpp.org/wiki/faq/const-correctness) link:
+
+```c++
+// General tip: read your pointer declarations right-to-left
+
+// p points to an X that is const:
+// the X object can’t be changed via p
+// ... but the content of p could be changed via another pointer
+// defined pointing to the same address and defined without const!
+const X* p;
+// p is a const pointer to an X that is non-const:
+// you can’t change the pointer p itself,
+// but you can change the X object via p
+X* const p;
+// p is a const pointer to an X that is const:
+// you can’t change the pointer p itself,
+// nor can you change the X object via p
+const X* const p;
+
+// x aliases an X object,
+// but you can’t change that X object via x;
+// x is a reference to an X that is const
+const X& x;
+
+X const& x; // == const X& x;
+X const* x; // == const X* x;
+
+
+// Const member functions
+class Fred {
+public:
+  void inspect() const;   // Const member function: promises NOT to change *this
+  void mutate();          // This member function might change *this
+};
+void userCode(Fred& changeable, const Fred& unchangeable)
+{
+  changeable.inspect();   // Okay: doesn't change a changeable object
+  changeable.mutate();    // Okay: changes a changeable object
+  unchangeable.inspect(); // Okay: doesn't change an unchangeable object
+  unchangeable.mutate();  // ERROR: attempt to change unchangeable object
+}
+
+// Return by const reference
+class Person {
+public:
+  const std::string& name_good() const;  // Right: caller can't change the Person's name
+  std::string& name_evil() const;        // Wrong: caller can change the Person's name
+  int age() const;                       // Right: caller can't change the Person's age
+};
+
+void myCode(const Person& p)  // myCode() promises not to change the Person object...
+{
+  // Often catched by compiler as ERROR
+  p.name_evil() = "Igor";     // But myCode() changed it anyway!!
+}
+
+// Const overloading if often necessary,
+// especially with subscript (access/modify) operators!
+// Example: we often pass an object as const& and access data within it
+// but we also modify its data in other parts where it is not const&
+// with the same operator []
+class Fred { /*...*/ };
+class MyFredList {
+public:
+  const Fred& operator[] (unsigned index) const;
+  Fred&       operator[] (unsigned index);
+  // ...
+};
+```
+
 
 #### Insertion and Merge Sort
 
@@ -343,7 +417,7 @@ while i < length(a)
 end
 ```
 
-Merge Sort, `O(n*log(n))`: efficient sorting algorithm, from Wikipedia:
+[Merge Sort](https://en.wikipedia.org/wiki/Merge_sort), `O(n*log(n))`: efficient sorting algorithm, from Wikipedia:
 
 1. Divide the unsorted list into n sublists, each containing one element (a list of one element is considered sorted).
 2. Repeatedly merge sublists to produce new sorted sublists until there is only one sublist remaining. This will be the sorted list.

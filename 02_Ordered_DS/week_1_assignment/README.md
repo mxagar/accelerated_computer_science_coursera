@@ -17,7 +17,7 @@ Notes extracted from the instructions and while completing the assignment.
 
 - Doubly-linked list; can be used as doubled-ended queue/stack: push/pop both ends, constant time access to front/back.
 - List contains nodes; **nodes are created in the heap**, each node contains `next` and `prev` pointers and also the data stored.
-- Class is similar to `std::list`, but not as through: missing `iterator`, memory layer not as abstracted, etc.
+- Class is similar to `std::list`, but not as thorough: missing `iterator`, memory layer not as abstracted, etc.
 
 ## New concepts: `const` and Sorting
 
