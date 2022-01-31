@@ -432,10 +432,10 @@ In contrast, hierarchical data structures like trees allow having elements with 
 - Elements are **nodes** (often depicted as circles); the **root node** is the first node
 - Nodes are connected by **edges**: arrows that connect parant nodes with children nodes
     - The root node has no parents (ie., incomming edges)
-- Nodes that have no children are called leaf nodes; they could be at any level
+- Nodes that have no children are called **leaf nodes**; they could be at any level
 - Nodes contain often the data
 - Edges are often not labelled and contain no data
-- Ancestry terms apply to trees: siblings, ancestors, granchildren, grandparent
+- Ancestry terms apply to trees: siblings, ancestors, grandchildren, grandparent
 - **Three conditions** must be true for a tree: **rooted, directed and acyclic**
     - Must have a root
     - Must have directed edges
@@ -445,12 +445,17 @@ In contrast, hierarchical data structures like trees allow having elements with 
 
 A binary tree is a tree where **every node has at most two children**. One child is the **left child** and the other is the **right child**.
 
+![Binary trees: terminology](./pics/binary_trees_terms.jpeg)
+
 Properties of a binary tree:
 
 - **Height** (`h`) of a binary tree: number of edges in the *longest path from the root to the leaf*
 - A binary tree is **full** iff every node has either zero or two children.
 - A binary tree is **perfect** iff all interior nodes have two children and all leaves are at the same level.
 - A binary tree is **complete** iff the tree is perfect until the last level (before the leaves) and all leaf nodes on the last level are pushed to the left; that means that there could be missing some leaves on the right until a node from which we have leafs to the left. Note that complete trees are not necessarily full, or vice-versa.
+
+![Types of binary trees](./pics/binary_trees_types.jpeg)
+
 
 Definition of a binary tree in `binary-tree/BinaryTree.h`:
 ```c++
@@ -477,11 +482,16 @@ It is different to a search: the search does not have to visit all nodes, just t
 A tree traversal can be done in many ways, depending what we'd like to prioritize.
 In general, we want to have different ways in which the data in the nodes is accessed, aka. shouted.
 
-Summary of basic traversals for BTs:
+Basically, in a binary tree traversal, we can do three operations in a node:
+- L: go left
+- R: go right
+- S: shout or access the node's data
+
+Given those basic operations, we can define four basic traversals for BTs:
 - `preOrder`: depth first, shouting/displaying current node first, then the children
 - `inOrder`: depth first, shouting/displaying current node between the children. Effect: **Items are displayed in order.**
 - `postOrder`: depth first, shouting/displaying current node last, after the children
-- `levelOrder`: breadth first, each level completely one after the other
+- `levelOrder`: breadth first, each level completely one after the other: first level 1, then level 2, etc.
 
 Example: `preOrder` traversal: starting with the root node, traverse all nodes by
 1. shouting (displaying or accessing/using) the value of the **current** node and the
@@ -500,7 +510,7 @@ void BinaryTree<T> preOrder(TreeNode* current) {
 }
 ```
 
-Example: `inOrder` traversal: go left, shout current, go right:
+Example: `inOrder` traversal: go left, shout current, go right. In the videos, an algebraic equation is decomposed in variables and operations and stored in a binary tree. With `inOrder` traversal, the equation is shouted in order!
 ```c++
 // inOrder traversal: go left, shout current, go right
 template<class T>
