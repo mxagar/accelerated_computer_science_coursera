@@ -540,23 +540,33 @@ void BinaryTree<T> postOrder(TreeNode* current) {
 
 A Binary Search Tree (BST) is an ordered binary tree capable of being used as a search structure. A binary tree is a BST if for every node in the tree:
 
-- nodes in the **left** are **less** than iteself
-- nodes in the **right** are **greater** than iteself
+- nodes in the **left** are **less** than itself
+- nodes in the **right** are **greater** than itself
 
-If we apply recursively this definition, we can store data that can be searched very quickly, for instance a `Dictionary` which associates `keys` with `values`:
+![Binary Search Trees: node key values are ordered](./pics/binary_search_tree_order.png)
+
+In the picture, for any node, ALL the nodes on their left must contain smaller values than what they contain.
+
+We have seen that nodes contain data. In a BST, we usually have to types of data in each node:
+- a `key` which is used to search, and to which we apply the ordering principle above (left < right)
+- and a `value` or `data` associated to that `key`, which is the ultimate information we are looking for.
+
+Indeed, if we apply recursively this ordering principle, we can store data that can be searched very quickly, for instance a `Dictionary` which associates `keys` with `values`:
 
 - email/username: profile
 - phone number: record
 - url: webpage
 - address: home
 
-Note that the nodes contain the `key` values as well as a pointer to the `value`; we omit the `value` for our purposes.
+As said, the nodes contain the `key` values as well as a pointer to the `value` or `data`; but we omit the `value` for our purposes.
+
+Note that the `keys` should be unique identifiers.
 
 `Dictionary` Abstract Data Type (ADT):
 
 - `find()`: given a `key`, find and return its `value`
-- `insert()`: given a `key:value` pair, insert is properly into the dictionary
-- `remove()`: remove a `key`
+- `insert()`: given a `key:value` pair, insert it properly into the dictionary
+- `remove()`: remove a `key` (and its `value`)
 - `empty()`: is the dictionary empty?
 
 Dictionary structure `bst/Dictionary.h`:
@@ -588,10 +598,12 @@ class Dictionary {
 
 Intuition of the `find()` function:
 
-- We have a value `v` we want to find.
-- We start with the root: is `v` the root, smaller, greater? Answer determines: finish, go left, go right.
+- We have a key `k` we want to find.
+- We start with the root: is `k` the root, smaller, greater? Answer determines: finish, go left, go right.
 - Process repeats with current node until either: we find the node or we reach a leaf without finding it.
-- Worst-case: visiting the longest path, i.e., if `h` is the height: `O(h)`. Note that the very worst case for `h` is th esituation in which our tree is a linked list, i.e., we have only left/right nodes; in that case `h` = `n` -> `O(n)`.
+- Worst-case: visiting the longest path, i.e., if `h` is the height: `O(h)`. Note that the very worst case for `h` is the situation in which our tree is like a linked list, i.e., we have only left/right nodes and we need to visit all of them; in that case `h` = `n` -> `O(n) = O(h)`.
+
+![BST: Find a key value which is not in the tree, i.e., following the longest path proportional to the tree's height](./pics/bst_find_longest_path.png)
 
 Implementation of `find()` in `bst/Dictionary.hpp`:
 ```c++
@@ -620,8 +632,9 @@ typename Dictionary<K, D>::TreeNode*& Dictionary<K, D>::_find(const K& key, Tree
 
 Intuition of the `insert()` function:
 
-- We basically `find()` the `key` we want to insert in th etree until we find the leaf.
-- We insert the `key` left or right to the detected leaf.
+- Note that `find()` returns the pointer of the node, which can be the node that contains the `key` or the leaf node which would contain a child with the `key`
+- Thus, we basically `find()` the `key` we want to insert in the tree until we find the leaf.
+- We insert the `key` left or right to the detected leaf; left/right is automatically given by `find()`.
 
 Implementation of `insert()` in `bst/Dictionary.hpp`:
 ```c++
@@ -637,18 +650,20 @@ void Dictionary<K, D>::insert(const K& key, const D& data) {
 
 Intuition of the `remove()` function:
 
-- We basically `find()` the `key` we want to insert in th etree until we find the node. The node can be
+- We basically `find()` the `key` we want to remove in the tree until we find the node. The node can be
     1. leaf (= no children) or
     2. somewhere in a middle level with one child or
     3. with two children or the root node
 - The cases (1) and (2) are straightforward: we remove the node (case 1) and re-link the nodes as in a linked list if necessary (case 2).
-- The case (3) is more complicated because we need to find a best new node. **The best cadidate for that is the node which has the closest `key` to the node we are removing**. That is called the **In-Order Predecessor** or IOP:
+- The case (3) is more complicated because we need to find a best new node. **The best candidate for that is the node which has the closest `key` to the node we are removing**. That is called the **In-Order Predecessor** or IOP:
     - That IOP node is the previous node to the one we are eliminating in an in-order traversal, i.e., a traversal of nodes with ascending `keys`.
     - It turns out that **the IOP node is always the rightmost node of the nodes's left sub-tree**, so
         - We go to the left tree
         - We take always the right node until we reach our leaf
         - We swap the IOP and the node we are removing
         - We delete the new leaf as in case 1
+
+![BST: remove a node with two children](./pics/bst_remove.jpeg)
 
 Implementation of `remove()` in `bst/Dictionary.hpp`:
 ```c++
