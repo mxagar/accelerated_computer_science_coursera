@@ -726,18 +726,27 @@ Performance considerations:
 - An **average balanced BST outforforms** any of these data structures for `find()`, `insert()` and `remove()` operations combined, bacause it requires `O(log(n))` for all of these operations:
     - Sorted list: `find(): O(n)`, `insert(): O(n)`, `remove(): O(n)`
     - Sorted array: `find(): O(log(n))`, `insert(): O(n)`, `remove(): O(n)`
-    - BST worst case (similar to a linked list): `find(): O(n)`, `insert(): O(n)`, `remove(): O(n)`
+    - BST worst case (which mimics a linked list): `find(): O(n)`, `insert(): O(n)`, `remove(): O(n)`
+
+Therefore, we want to find out how to assure that average balanced BST.
+
+![Runtime of basic operations for the BST in contrast to sorted arrays and lists](./pics/bst_operation_runtime_analysis.png)
 
 We define the **height balance factor**: the difference in height between its two left and right subtrees:
 
 `b = height(T_r) - height(T_l)`
 
 - `b = 0`, BST is perfectly balanced
-- `b > 0`, the higher, the more inbalanced to the right
-- `b < 0`, the bigger the nagative, the more inbalanced to the left
+- `b > 0`, the higher, the more imbalanced to the right
+- `b < 0`, the bigger the negative, the more imbalanced to the left
 
 Note that the height of a node with no children is `h = -1`; each level of children given a height unit to a node.
 
-A tree is considered balanced if `b in {0,-1,1}`. For that, all its sub-trees need to have a `b in {0,-1,1}` recursively. Usually, we start from the leaf level and go upwards to see where the inbalance starts happening (i.e., `abs(b) > 1`); once we find and inbalance, it propagates upwards.
+**A tree is considered balanced if `b in {0,-1,1}`. For that, all its sub-trees need to have a `b in {0,-1,1}` recursively**. Usually, we start from the leaf level and go upwards to see where the imbalance starts happening (i.e., `abs(b) > 1`); once we find and imbalance, it propagates upwards.
+
+In the following image, the `b` height balance factor is computed for each node of the two trees:
+
+![Balanced BST: height balance factor is computed for each node](./pics/balanced_bst.png)
 
 There are algorithms that maintain the balance of a BST!
+
