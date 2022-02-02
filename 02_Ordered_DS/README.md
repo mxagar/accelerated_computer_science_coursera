@@ -853,15 +853,115 @@ Also, some important properties of AVL trees:
 - Rotations can be performed in `O(1)`, because they are independent from the number of nodes.
 
 ![AVL: Rotation summary](./pics/avl_rotation_summary.png)
+
+Another intuitive graphical way to understand it:
+
+- `b = 2, 1`: right stick -> apply left rotation
+- `b = -2, -1`: left stick -> apply right rotation
+- `b = 2, -1`: right elbow -> apply right rotation, then left rotation
+- `b = -2, 1`: left elbow -> apply left rotation, then right rotation
+
 #### 3.1.2 AVL Analysis: `avl::insert()` and `avl::remove()`
 
-AVL trees are self-balanced BSTs. They are kept in balance every time we insert a new node or remove an existing one. The algorithm for that is in the previous section. Basically, the height balance factor `b` is tracked and whenever a node has `|b| = 2`, a combination of two rotation operations is performed, depending on the `b` of of the child of the node with `|b| = 2`.
+AVL trees are self-balanced BSTs. They are kept in balance every time we insert a new node or remove an existing one. The algorithm for that is in the previous section. Basically, the height `h` of the nodes is tracked to compute the height balance factor `b` whenever an insertion/remove is performed. Then, when a node has `|b| = 2`, a combination of two rotation operations is carried out, depending on the `b` value of the child of the node with `|b| = 2`.
 
 Therefore, an AVL tree is basically a BST, but with two additional properties:
 - We keep track of the height value `h` of each node to be able to compute the height balance factor `b` easily
 - We do the extra task of balancing every time we insert/remove a node
 
+#### 3.1.2.1 `avl::insert()`
 
+The following images show the process of performing `avl::insert()` with an example; sour steps need to be carried out:
+
+1. Insert at proper place following the path
+2. Check for imbalance along the path
+3. If there is an imbalance, apply the proper rotation
+4. Update the height along the path
+
+![AVL: Example of insert(), first two steps](./pics/avl_example_insert_1.jpeg)
+
+![AVL: Example of insert(), last two steps](./pics/avl_example_insert_2.jpeg)
+
+A simplified version (without checks) of the basic functions to perform a balanced insertion from `./avl/AVL.hpp`:
+
+```c++
+
+template <typename K, typename D>
+void AVL<K, D>::_ensureBalance(TreeNode*& cur) {
+  // Calculate the balance factor:
+  const int balance = height(cur->right) - height(cur->left);
+  // Check if not in balance
+  if (balance == -2) {
+    int l_balance = height(cur->left->right) - height(cur->left->left);
+    if (l_balance == -1) _rotateRight(cur);
+    else if (l_balance == 1) _rotateLeftRight(cur);
+  } else if (initial_balance == 2) {
+    int r_balance = height(cur->right->right) - height(cur->right->left);
+    if (r_balance == 1) _rotateLeft(cur);
+    else if (l_balance == -1) _rotateRightLeft(cur);
+  }
+  _updateHeight(cur);
+}
+
+template <typename K, typename D>
+void AVL<K, D>::_updateHeight(TreeNode*& cur) {
+  cur->height = 1 + std::max(height(cur->left), height(cur->right));
+}
+
+template <typename K, typename D>
+void AVL<K, D>::_rotateLeft(TreeNode*& cur) {
+
+  TreeNode* x = cur;
+  TreeNode* y = cur->right;
+  TreeNode* z = cur->right->left;
+
+  x->right = z;
+  y->left = x;
+  cur = y;
+
+  _updateHeight(x);
+  _updateHeight(y);
+
+}
+```
+
+#### 3.1.2.2 `avl::remove()`
+
+Removing a similar; we need to follow these steps:
+1. Find the node and track the path
+2. Remove the node as explained in Section 2.4:
+   - Find the IOP of the node: the rightmost node of the left sub-tree
+   - Swap the IOP with the node to be removed
+   - Remove the swapped node
+3. Update the height values `h` along the path
+4. Compute the height balance factors `b` along the path
+5. If `|b| > 1` anywhere, perform the necessary rotations
+6. Update the height values `h` along the path
+
+![AVL: example remove() operation](./pics/avl_example_remove.png)
+
+A simplified version (without checks) from `./avl/AVL.hpp` of the basic function to perform the balanced removal in the previous example:
+
+```c++
+template <typename K, typename D>
+const D& AVL<K, D>::_iopRemove(TreeNode*& targetNode, TreeNode*& iopAncestor) {
+  
+  if (iopAncestor->right != nullptr) {
+    // IOP not found, go deeper
+    const D& d = _iopRemove(targetNode, iopAncestor->right);
+    if (iopAncestor) _ensureBalance(iopAncestor);
+    return d;
+  } else {
+    // Found IOP: swap locations
+    TreeNode*& movedTarget = _swap_nodes(targetNode, iopAncestor); // movedTarget is in the IOP
+    // Remove swapped node, now in IOP position
+    const D& d = _remove(movedTarget);
+    return d;
+  }
+}
+```
+
+A fully implemented AVL tree is in `./avl`; we can try it running `./avl/avl` after compiling `./avl/main.cpp`.
 
 ### 3.2 B-Trees
 #### 3.2.1 B-Tree Introduction
