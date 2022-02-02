@@ -25,6 +25,15 @@ Overview of contents:
    - 2.3 Tree Traversals
    - 2.4 Binary Search Trees (BST)
    - 2.5 BST Analysis
+3. Week 3: AVL Trees and B-Trees
+   - 3.1 AVL Trees
+     - 3.1.1 AVL Trees: Self-Balancing BSTs
+     - 3.1.2 AVL Analysis: `avl::insert()` and `avl::remove()`
+   - 3.2 B-Trees
+     - 3.2.1 B-Tree Introduction
+     - 3.2.2 B-Tree Insert
+     - 3.2.3 B-Tree Search
+   - 3.3 Week 3 Assignment
 
 
 ## Week 1: Linear Structures
@@ -750,3 +759,112 @@ In the following image, the `b` height balance factor is computed for each node 
 
 There are algorithms that maintain the balance of a BST!
 
+## 3. Week 3: AVL Trees and B-Trees
+
+### 3.1 AVL Trees
+
+#### 3.1.1 AVL Trees: Self-Balancing BSTs
+
+AVL stands for Adelson-Velsky and Landis.
+An [AVL tree](https://en.wikipedia.org/wiki/AVL_tree) is a self-balancing binary search tree (BST).
+The main idea consists in balancing the tree (if necessary) every time we insert or remove a node.
+For that:
+- The height balance factor is computed for each node
+- If the magnitude of the balance factor of any node is `|b| > 1`, one of four possible rotation operations are performed; each operation type depends on the value of `b` and it balances the complete tree!
+- The values of `b` and the operations are associated to characteristic topological structures in the tree: **mountain**, **stick**, **elbow**. The operations are used to convert any structure in a mountain, such that `elbow -> stick -> mountain`.
+
+![AVL: Imbalanced structures and the rotations to correct them](./pics/bst_imbalanced_structures.jpeg)
+
+**In practice, the implementation for balancing is very easy**:
+- Every time we insert a node, we compute the height balance factor `b` os all nodes
+- If a node has `b = {-2,2}`, we have an imbalance
+- We look at its child node, which will have `b = {-1, 1}`
+- Depending on the four possible combinations of `b` values `{-2, 2}x{-1, 1}`, we perform a combination of two possible operations: **left rotation** or **right rotation**.
+
+These combined operations achieve the transformations `elbow -> stick -> mountain`.
+In the following, two subsections explain in detail the operations and the summary subsection gives the practical recipe for implementation:
+- `Stick -> Mountain`: Generic Left Rotation
+- `Elbow -> Stick -> Mountain`: Generic Right-Left Rotation
+- **Summary & Practical Application: That, together with the pictures of the generic left and right rotations is the important part**.
+
+##### 3.1.1.1 `Stick -> Mountain`: Generic Left Rotation
+
+A mountain has both left and right children.
+A stick is a substructure in which a node has one child and one grandchild in the same direction (left or right).
+
+Let's consider a tree which is in balance.
+We insert a node (in yellow) and it is suddenly not in balance.
+To balance the tree, we do as follows:
+- We compute the height balance factor `b` for all the nodes and select the one with the largest `b`: that is the **deepest node out of balance**.
+- We identify the stick structure
+- The middle node of the stick is pushed up and the stick becomes a mountain
+  - left and right nodes with their subtrees hang from the middle node after pushing it up
+  - the middle node hangs from the position where the previous higher of the three was
+  - if the middle node had two children, one is attached to the left/right node which corresponds: it must have max. 1 child and node values must match
+
+![BST rotation: from stick to  mountain](./pics/bst_rotation_stick_mountain.png)
+
+These operations on the example can be generalized as **left rotation**, summarized below.
+
+**Generic Left Rotation**
+
+When a tree is imbalanced to the right, a node B has `b = 2` and its right child C has `b = 1`.
+In that case:
+- We push node C to the place of B
+- Hang B from the left of C
+- Hang the left tree from C to the right from B
+
+See pictures, everything is very clear if the second pic/slide is followed.
+
+![AVL: Generic Left Rotation 1](./pics/avl_generic_left_rotation.png)
+
+![AVL: Generic Left Rotation 2](./pics/avl_generic_left_rotation_2.png)
+
+##### 3.1.1.2 `Elbow -> Stick -> Mountain`: Generic Right-Left Rotation
+
+When an elbow is created with a new inserted node (yellow), we need to unbend it to transform it into a stick. That is achieved by pushing the new node up and the bend down as a child of the pushed node. Then, the stick is converted into a mountain! The operations are called **right-left rotation**.
+
+![AVL: Elbow rotation](./pics/avl_elbow_rotation.png)
+
+**Generic Right-Left Rotation**
+
+The generic right-left rotation generalizes how to balance a tree with an elbow.
+See pictures, everything is very clear if the second pic/slide is followed.
+
+Note that first a **right rotation** is done (`elbow -> stick`) and then a **left rotation** (`stick -> mountain`).
+
+![AVL: Generic Right-Left Rotation 1](./pics/avl_generic_right_left_rotation.png)
+
+![AVL: Generic Right-Left Rotation 2](./pics/avl_generic_right_left_rotation_2.png)
+
+##### 3.1.1.3 Summary & Practical Application
+
+In summary, we have two structures (sticks & elbows) and they can appear slanted in two directions (left & right). To correct them and balance the tree, a combination of two operations is used: left rotation and right rotation.
+
+A very easy way to detect the structure type (stick/elbow slanted left/right) and the combination of operations required is identifying the key height balance factors: the `b` of the node with `|b| = 2` and the `b` of its child in the direction of the imbalance (`b = 2`: right direction imbalance, `b = -2`: left direction imbalance). The following table summarizes the algorithm to follow after the `b` values of the two nodes have been identified.
+
+Note that
+- sticks require one operation only and they have consecutive `b` values of the same sign (in the imbalance direction)
+- elbows require two operations and they have consecutive `b` values of the different sign (in the imbalance direction)
+
+Also, some important properties of AVL trees:
+- Rotations are local operations performed in the 2-3 nodes that form the imbalanced structure. We basically re-arrange a few pointer addresses :)
+- Rotations do not impact the broader tree
+- Rotations can be performed in `O(1)`, because they are independent from the number of nodes.
+
+![AVL: Rotation summary](./pics/avl_rotation_summary.png)
+#### 3.1.2 AVL Analysis: `avl::insert()` and `avl::remove()`
+
+AVL trees are self-balanced BSTs. They are kept in balance every time we insert a new node or remove an existing one. The algorithm for that is in the previous section. Basically, the height balance factor `b` is tracked and whenever a node has `|b| = 2`, a combination of two rotation operations is performed, depending on the `b` of of the child of the node with `|b| = 2`.
+
+Therefore, an AVL tree is basically a BST, but with two additional properties:
+- We keep track of the height value `h` of each node to be able to compute the height balance factor `b` easily
+- We do the extra task of balancing every time we insert/remove a node
+
+
+
+### 3.2 B-Trees
+#### 3.2.1 B-Tree Introduction
+#### 3.2.2 B-Tree Insert
+#### 3.2.3 B-Tree Search
+### 3.3 Week 3 Assignment
