@@ -8,6 +8,8 @@ include_directories(${SRC_DIR})
 
 set (   SRC_FILES 
         AVL.cpp
+        AVL.hpp
+        AVL-extra.hpp
     )
 
 # Compilation -> add_executable / add_library
