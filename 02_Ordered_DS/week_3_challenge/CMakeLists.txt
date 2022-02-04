@@ -17,4 +17,4 @@ set (LDFLAGS "-std=c++14")
 
 # ./stack
 add_executable(week3challenge main.cpp ${SRC_FILES})
-#target_link_libraries(week2challenge ${LIBS})
+#target_link_libraries(week3challenge ${LIBS})

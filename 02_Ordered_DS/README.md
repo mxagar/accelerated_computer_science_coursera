@@ -1010,7 +1010,7 @@ With these properties, whenever we see a B-Tree we can bound or reason its order
 
 Not considered in this course, because it is considerably more complex.
 
-#### 3.2.4 B-Tree Search
+#### 3.2.5 B-Tree Search
 
 
 `./btree/BTree.h`:
@@ -1032,8 +1032,6 @@ bool BTree<K>::_exists(BTree<K>::BTreeNode & node, const K & key) {
     return _exists(nextChild, key);
   } 
 }
-
-
 ```
 
 ### 3.3 Week 3 Assignment
