@@ -32,7 +32,9 @@ Overview of contents:
    - 3.2 B-Trees
      - 3.2.1 B-Tree Introduction
      - 3.2.2 B-Tree Insert
-     - 3.2.3 B-Tree Search
+     - 3.2.3 B-Tree Properties
+     - 3.2.4 B-Tree Remove/Delete: Not considered in this course, because it is considerably more complex
+     - 3.2.5 B-Tree Search
    - 3.3 Week 3 Assignment
 
 
