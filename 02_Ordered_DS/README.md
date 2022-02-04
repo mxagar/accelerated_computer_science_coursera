@@ -964,7 +964,76 @@ const D& AVL<K, D>::_iopRemove(TreeNode*& targetNode, TreeNode*& iopAncestor) {
 A fully implemented AVL tree is in `./avl`; we can try it running `./avl/avl` after compiling `./avl/main.cpp`.
 
 ### 3.2 B-Trees
+
 #### 3.2.1 B-Tree Introduction
+
+The Big `O()` notation measures runtime performance considering memory allocation and access is uniform. However, data intensive applications cannot make that assumption -- these are applications that cannot store in main (RAM) memory all the data, having some on disk or somewhere else (e.g., on the cloud).
+
+The goal of B-Tree is to have a data structure with which we can perform well with data on memory or on disk; specifically, the goal is to minimize disk/network seeks.
+
+It is built as follows:
+- Each node in the B-Tree has a number of keys, each with any value, e.g., integers: `[1, 100, 250, 400, 900, 1600]`. Note that ordering between the keys must be possible, as they are inserted in order.
+- We define the **order** `m` of a B-Tree as **the maximum number of keys of each can have node + 1**; above `m = 6 + 1 = 7`. We can have less than `m - 1` keys, but never more!
+- Between the keys we have pointers that point to another node with keys between the keys around the pointer. After the key `100` we will have a pointer pointing to a node with keys between `100` and `250`. The first and last keys in a node can have also a pointer before and after, pointing to nodes with keys previous and posterior to them
+
 #### 3.2.2 B-Tree Insert
-#### 3.2.3 B-Tree Search
+
+Insertion of a new key into a node works as follows:
+- First we find in the tree in which node the key should go.
+- We add the key to the node we found: if the number of keys exceeds is `=< m-1`, we're done. Otherwise, we will exceed the node in one key (i.e., we have `m` keys). In that case:
+  - We split the node in 2 halves and the middle key in between.
+  - We need to push up (throw up) the middle key to the parent node.
+- Then, the process repeats recursively upwards. At some point, we might need to create a new node, even with a single key.
+
+![B-Tree insertion](./pics/b_tree_insertion.jpeg)
+
+#### 3.2.3 B-Tree Properties
+
+- A B-Tree has an order `m`
+- Each node can have a maximum of `m - 1` keys
+- Keys are always sorted
+- Each internal node has one more children pointers than keys: that is because we have pointers before, after and between the keys
+  - Thus, each node has at most `m` children
+  - A root node can be a leaf or have `[2,m]` children
+  - Each non-root, internal node has `[ceil(m/2),m]` children: at least have full! That makes sense, because we split in half if full!
+- All leaves are on the same level
+- We build the tree upwards, by pushing the nodes up when new nodes are inserted.
+
+With these properties, whenever we see a B-Tree we can bound or reason its order:
+- Max keys `m - 1`
+- Inner nodes minimum `ceil(m/2)` children pointers
+- ...
+
+![B-Tree: reasoning the order](./pics/b_tree_order.png)
+
+#### 3.2.4 B-Tree Remove/Delete: Not considered in this course, because it is considerably more complex
+
+Not considered in this course, because it is considerably more complex.
+
+#### 3.2.4 B-Tree Search
+
+
+`./btree/BTree.h`:
+
+```c++
+template <typename K>
+bool BTree<K>::_exists(BTree<K>::BTreeNode & node, const K & key) {
+  unsigned i;
+  for ( i = 0; i < node.keys_ct_ && key < node.keys_[i]; i++) { }
+
+  if ( i < node.keys_ct_ && key == node.keys_[i] ) {
+    return true;
+  }
+
+  if ( node.isLeaf() ) {
+    return false;
+  } else {
+    BTreeNode nextChild = node._fetchChild(i);
+    return _exists(nextChild, key);
+  } 
+}
+
+
+```
+
 ### 3.3 Week 3 Assignment
