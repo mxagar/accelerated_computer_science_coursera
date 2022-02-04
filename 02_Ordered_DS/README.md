@@ -1012,26 +1012,62 @@ Not considered in this course, because it is considerably more complex.
 
 #### 3.2.5 B-Tree Search
 
+During the search of a key in the B-Tree we do as many comparisons as the height `h` of the tree.
+
+In other words, the height of the tree determines the number of seeks possible during search.
+Recall that seeks are the operations which are time consuming, since they access the disk/network.
+
+Below, an example in provided for the function `BTree::_exists()`, which calls `Node::_fetchChild(i)`, the seeking function we'd like to avoid.
 
 `./btree/BTree.h`:
 
 ```c++
+// We pass a node of a B-Tree and a key
+// We want to find out whether that key exists in the tree
 template <typename K>
 bool BTree<K>::_exists(BTree<K>::BTreeNode & node, const K & key) {
   unsigned i;
+  // We visit the keys in the passed node
+  // until we find the key which is larger than the key to find
+  // for stops with i pointer value
+  // Note that we could do a binary search (O(log(n))) instead of this linear search (O(n))
+  // BUT: this search time is insignificant
+  // what really is time consuming is _fetchChild below!!
+  // Reason: it fetches data from disk/network/cloud!
   for ( i = 0; i < node.keys_ct_ && key < node.keys_[i]; i++) { }
 
+  // Key found: we're done - found!
   if ( i < node.keys_ct_ && key == node.keys_[i] ) {
     return true;
   }
 
+  // If node is leaf and key was not found: we're done -- not found!
   if ( node.isLeaf() ) {
     return false;
   } else {
+    // We have not found the key yet, but
+    // - we are not leaf
+    // - we have the pointer to go deeper in the tree
+    // So: we fetch the child of the pointer
+    // and recursively call this function again!
+    // Note: _fetchChild is the most time consuming part we want to prevent
+    // because it fetches data from disk/network/cloud!
     BTreeNode nextChild = node._fetchChild(i);
     return _exists(nextChild, key);
   } 
 }
 ```
+
+Important properties:
+- The height `h` of the structure is `log_m(n)`
+- The number of seeks (calls to `fetchChild()`) is no more than `h = log_m(n)`. Or: `m^h = n`.
+
+Example:
+
+- `n = 1,000,000,000,000 = 10^12` keys in total
+- order `m = 1001` 
+- `h = log_m(n) = log(base=10^3,10^12) = 4`: we only will need to to 4 seeks with so many keys!
+
+That's an excellent data structure for large datasets that are hybrid: part in memory, part fetched over the network or in disk.
 
 ### 3.3 Week 3 Assignment
