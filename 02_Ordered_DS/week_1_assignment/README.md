@@ -1,6 +1,7 @@
 # Ordered Data Structures: Week 1 Assignment: Linked Lists and Merge Sort
 
 Notes extracted from the instructions and while completing the assignment.
+
 ## General instructions
 
 - Compile: `make clean`, `make` and `make test`
