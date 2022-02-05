@@ -78,10 +78,40 @@ class GenericTree<T> // Implementation separated: in same file, after definition
 
 File: `GenericTreeExercises.h`
 
-Modify a passed treed.
+Modify a passed treed to output
+
+```
+4
+|
+|_ 8
+|  |
+|  |_ 16
+|  |  |
+|  |  |_ 42
+|  |
+|  |_ 23
+|
+|_ 15
+```
+
+```c++
+static void treeFactory(GenericTree<int>& tree) {
+  tree.clear();
+  tree.createRoot(4);
+  auto node_4 = tree.getRootPtr();
+  auto node_8 = node_4->addChild(8);
+  node_4->addChild(15);
+  auto node_16 = node_8->addChild(16);
+  node_8->addChild(23);
+  node_16->addChild(42);
+
+}
+```
+
 
 ## Exercise 2: Implement `traverseLevels()` 
 
 File: `GenericTreeExercises.h`
 
 Level-order traversal of the input tree (queues seem a reasonable tool here).
+
