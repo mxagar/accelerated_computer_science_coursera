@@ -56,20 +56,21 @@ class GenericTree<T> // Implementation separated: in same file, after definition
             stack-based node deletion
             and memory de-allocation
             not recursive, to avoid issues with memory stack size
-            two stacks are created while going through the tree
+            two stacks (LIFO) are created while going through the tree
                 explore stack
                 delete stack
         void compress() // remove nullptrs originated after deleteSubtree
-            -> here!
+            a queue (FIFO) is created with nodes to explore
+            staring with root
+            for each node, a std::vector with children pointers without nullptr
+            is created and swaped
         constructors & co.
         copy disabled
         void clear()
             deleteSubtree(rootNodePtr)
         std::ostream& Print(std::ostream& os) const // vertical tree output
-
-deleteSubtree
-compress
-Print
+            preOrder traverse is performed through all nodes
+            several support stacks are used
 
 ```
 
