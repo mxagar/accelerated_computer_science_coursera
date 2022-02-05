@@ -31,6 +31,48 @@ Notes extracted from the instructions and while completing the assignment.
 
 Hints for exercises 1 & 2 are already in the provided code and in the comments.
 
+```
+class GenericTree<T> // Implementation separated: in same file, after definition
+    (public)
+        class TreeNode (all public, nullptr initializations)
+            TreeNode* parentPtr
+            std::vector< TreeNode* > childrenPtrs
+            T data
+            TreeNode* addChild(const T& childData)
+                TreeNode* newChildPtr = new TreeNode(childData)
+                newChildPtr->parentPtr = this
+                childrenPtrs.push_back(newChildPtr)
+                return newChildPtr
+            constructors & co.
+            copy disabled
+    (private)
+        TreeNode* rootNodePtr // initialized to nullptr
+    (public)
+        TreeNode* createRoot(const T& rootData)
+            rootNodePtr = new TreeNode(rootData)
+            return rootNodePtr
+        TreeNode* getRootPtr()
+        void deleteSubtree(TreeNode* targetRoot)
+            stack-based node deletion
+            and memory de-allocation
+            not recursive, to avoid issues with memory stack size
+            two stacks are created while going through the tree
+                explore stack
+                delete stack
+        void compress() // remove nullptrs originated after deleteSubtree
+            -> here!
+        constructors & co.
+        copy disabled
+        void clear()
+            deleteSubtree(rootNodePtr)
+        std::ostream& Print(std::ostream& os) const // vertical tree output
+
+deleteSubtree
+compress
+Print
+
+```
+
 ## Exercise 1: Implement `treeFactory()`
 
 File: `GenericTreeExercises.h`
