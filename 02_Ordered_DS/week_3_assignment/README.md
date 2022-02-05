@@ -78,7 +78,7 @@ class GenericTree<T> // Implementation separated: in same file, after definition
 
 File: `GenericTreeExercises.h`
 
-Modify a passed treed to output
+Modify a passed treed to obtain the following output:
 
 ```
 4
@@ -104,7 +104,6 @@ static void treeFactory(GenericTree<int>& tree) {
   auto node_16 = node_8->addChild(16);
   node_8->addChild(23);
   node_16->addChild(42);
-
 }
 ```
 
@@ -114,4 +113,14 @@ static void treeFactory(GenericTree<int>& tree) {
 File: `GenericTreeExercises.h`
 
 Level-order traversal of the input tree (queues seem a reasonable tool here).
+
+Background discussion notes:
+- Pre-, in- and post-order traversals are for depth-breadth traversals
+- A level-order traversal is breadth-first and it can be accomplished making use of a queue (FIFO), among other strategies
+- Recursive approaches ar every elegant, but if too much recursions are performed, we might hit against the limitations of the stack memory
+- In general, we can use hybrid iterative-recursive approaches
+
+Two example functions are provided, one recursive, the other iterative:
+- `countNullChildrenRecursive()`
+- `countNullChildrenIterative()`
 
