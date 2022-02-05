@@ -35,7 +35,8 @@ Overview of contents:
      - 3.2.3 B-Tree Properties
      - 3.2.4 B-Tree Remove/Delete: Not considered in this course, because it is considerably more complex
      - 3.2.5 B-Tree Search
-   - 3.3 Week 3 Assignment
+   - 3.3 Week 3 Challenge
+   - 3.4 Week 3 Assignment
 
 
 ## Week 1: Linear Structures
@@ -460,7 +461,7 @@ A binary tree is a tree where **every node has at most two children**. One child
 
 Properties of a binary tree:
 
-- **Height** (`h`) of a binary tree: number of edges in the *longest path from the root to the leaf*
+- **Height** (`h`) of a binary tree: **number of edges** in the *longest path from the root to the leaf*
 - A binary tree is **full** iff every node has either zero or two children.
 - A binary tree is **perfect** iff all interior nodes have two children and all leaves are at the same level.
 - A binary tree is **complete** iff the tree is perfect until the last level (before the leaves) and all leaf nodes on the last level are pushed to the left; that means that there could be missing some leaves on the right until a node from which we have leafs to the left. Note that complete trees are not necessarily full, or vice-versa.
@@ -1072,4 +1073,11 @@ Example:
 
 That's an excellent data structure for large datasets that are hybrid: part in memory, part fetched over the network or in disk.
 
-### 3.3 Week 3 Assignment
+### 3.3 Week 3 Challenge
+
+Write the `height()` method/function that computes the height of all the subnodes of the input node.
+
+See `./week_3_challenge` for the implementation and more information.
+
+### 3.4 Week 3 Assignment
+
