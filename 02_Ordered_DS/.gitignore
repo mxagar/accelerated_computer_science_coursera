@@ -2,3 +2,4 @@ build
 .vscode
 .objs
 .DS_Store
+**/.DS_Store
