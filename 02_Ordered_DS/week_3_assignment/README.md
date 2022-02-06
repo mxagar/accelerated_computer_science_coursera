@@ -124,3 +124,32 @@ Two example functions are provided, one recursive, the other iterative:
 - `countNullChildrenRecursive()`
 - `countNullChildrenIterative()`
 
+Solution:
+
+```c++
+template <typename T>
+std::vector<T> traverseLevels(GenericTree<T>& tree) {
+  using TreeNode = typename GenericTree<T>::TreeNode;
+  std::vector<T> results;
+
+  auto rootNodePtr = tree.getRootPtr();
+  if (!rootNodePtr) return results;
+
+  std::queue<TreeNode*> nodesToExplore;
+  nodesToExplore.push(rootNodePtr);
+
+  while (!nodesToExplore.empty()) {
+
+    TreeNode* frontNode = nodesToExplore.front();
+    nodesToExplore.pop();
+
+    if (frontNode) {
+      results.push_back(frontNode->data);
+      for (auto childPtr : frontNode->childrenPtrs) {
+        nodesToExplore.push(childPtr);
+      }
+    }
+  }
+  return results;
+}
+```
