@@ -350,19 +350,16 @@ std::vector<T> traverseLevels(GenericTree<T>& tree) {
 
   // Loop while there are still nodes to explore
   while (!nodesToExplore.empty()) {
-
+  
     TreeNode* frontNode = nodesToExplore.front();
     nodesToExplore.pop();
 
-    if (!frontNode) {
+    if (frontNode) {
       results.push_back(frontNode->data);
-      continue;
+      for (auto childPtr : frontNode->childrenPtrs) {
+        nodesToExplore.push(childPtr);
+      }
     }
-
-    for (auto childPtr : frontNode->childrenPtrs) {
-      nodesToExplore.push(childPtr);
-    }
-
   }
 
   return results;
