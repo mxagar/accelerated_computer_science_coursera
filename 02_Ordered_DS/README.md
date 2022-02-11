@@ -37,6 +37,7 @@ Overview of contents:
      - 3.2.5 B-Tree Search
    - 3.3 Week 3 Challenge
    - 3.4 Week 3 Assignment
+4. Week 4: Heaps
 
 
 ## Week 1: Linear Structures
@@ -1080,4 +1081,43 @@ Write the `height()` method/function that computes the height of all the subnode
 See `./week_3_challenge` for the implementation and more information.
 
 ### 3.4 Week 3 Assignment
+
+See `week_3_assignment/README.md`.
+
+## Week 4: Heaps
+
+### 4.1 Motivation: Priority Queues
+
+A heap is a binary tree built so that children node values are always bigger than the parent node value.
+However, heaps are represented in an array, which gives them particular advantageous operation capabilities.
+
+The motivation behind heaps are **priority queues**: we collect numbers or similar objects and we want to be able to `remove()` the minimum/maximum value every time. Watch out:
+
+- We might remove several objects in a row, so keeping the `min` or `max` as a variable doesn't work.
+- Unsorted lists and arrays have `O(1)` insertion, but `O(n)` `removeMin()`.
+- Sorted lists and arrays have `O(n)` insertion, and `O(1)` `removeMin()`.
+- Thus, although an ordered list allows for fast `removeMin()`, inserting elements / maintaining it ordered is very costly, we need something more effective: a heap.
+
+The heap is a binary tree with these defining properties (min-heap): `T` is a heap if
+
+- `T = {}` (it is empty), or
+- `T = {r, T_L, T_R}`, where `r` is less than the roots of `{T_L, T_R}`, and `{T_L, T_R}` are  min heaps.
+
+So, all about we care is: the parent node needs to be smaller than its descendants; we don't care about the left subtree when we observe the right one, or vice versa.
+
+![Heap definition](./pics/heap_definition.png)
+
+We will ensure that a heap is a **complete tree**:
+
+- Perfect until the last level: all nodes filled in
+- In the last level, all the nodes pushed to the left
+
+Since the heap is a complete tree, we can store the heap in an array with the noes stored in breadth-first order.
+Additionally, since it is a binary tree, we can very easily navigate between the children/parent nodes:
+
+- For a current node with index `i = 1, 2, ...`, its parent node index will be `floor(i/2)`
+- For a current node index `i = 1, 2, ...`, its left child node index will be `2*i`, the right one `2*i + 1`
+
+![Heap array representation](./pics/heap_array.png)
+
 
