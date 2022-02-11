@@ -1086,7 +1086,7 @@ See `week_3_assignment/README.md`.
 
 ## Week 4: Heaps
 
-### 4.1 Motivation: Priority Queues
+### 4.1 Motivation: Priority Queues & Heap Definition
 
 A heap is a binary tree built so that children node values are always bigger than the parent node value.
 However, heaps are represented in an array, which gives them particular advantageous operation capabilities.
@@ -1113,6 +1113,7 @@ We will ensure that a heap is a **complete tree**:
 - In the last level, all the nodes pushed to the left
 
 Since the heap is a complete tree, we can store the heap in an array with the noes stored in breadth-first order.
+In other words, we think of it as a tree, but it is stored like an array!
 Additionally, since it is a binary tree, we can very easily navigate between the children/parent nodes:
 
 - For a current node with index `i = 1, 2, ...`, its parent node index will be `floor(i/2)`
@@ -1120,4 +1121,89 @@ Additionally, since it is a binary tree, we can very easily navigate between the
 
 ![Heap array representation](./pics/heap_array.png)
 
+Note that we start counting the node indices at `i = 1`, not `0`; that is equivalent as to leaving the first cell/node empty.
 
+### 4.2 Heap Insert
+
+Insertion of a new node into the heap happens with these easy steps:
+
+1. We insert the node at the end of array: that is equivalent to inserting a node at the last level, hanging from the leftmost node with at least a free slot
+2. We check that the inserted node with index `i` is smaller (if min-heap) than its parent in position `floor(i/2)`. If so, we are done.
+3. If the parent is larger, then we swap child and parent. That swapping upwards is sometimes called `heapifyUp()`.
+4. Now, we repeat steps 2 & 3 to swap the node upwards if necessary (i.e., if it is smaller than its parents).
+
+Example pic: we do first `insert(8)` (no swapping necessary), the `insert(3)` (node is swapped upwards).
+
+![Heap: insert a node](./pics/heap_insert.png)
+
+Note that for every insertion we need to check the capacity of the heap.
+If we're out of space, we need to expand the tree/array: `growArray()`. Recall we can achieve that in `O(1)*` (amortized) if we double the array size every time. In the case of a binary tree, doubling the array size means adding a new level!
+
+`./heap/Heap.hpp`
+
+```c++
+template <typename T>
+void Heap<T>::insert(const T key) {
+  // Check to size, grow if necessary
+  if ( size_ == capacity_ ) { _growArray(); }
+  // Insert the new element at the end of the array
+  size_++;
+  item_[size_] = key;
+  // Restore the heap property: swap upwards if necessary
+  _heapifyUp(size_);
+}
+
+template <class T>
+void Heap<T>::_heapifyUp( unsigned index ) {
+  if ( !_isRoot(index) ) { // index != 1
+    if ( item_[index] < item_[ _parent(index) ] ) {
+      std::swap( item_[index], item_[ _parent(index) ] );
+      _heapifyUp( _parent(index) ); // Recursive call to parent = floor(index/2)
+    }
+  }
+}
+```
+
+### 4.3 Heap Remove (Min)
+
+In a heap we always remove the minimum/maximum element, nothing else can be removed; that minimum element will always be the root node.
+We need to maintain the heap property after any removal. That is achieved with `heapifyDown()`, which consists in swapping down nodes.
+Here is the list of steps to follow:
+
+1. After popping the root node, we swap the very last node (last item in array) to the front (root).
+2. We compare the new root against its children: if there is a smaller one, both are swapped; otherwise, we finished.
+3. We repeat step 2 with the swapped child. That process is commonly known as `heapifyDown()`.
+
+
+![Heap: ](./pics/heap_array_example.jpeg)
+
+![Heap: ](./pics/heap_remove_example.jpeg)
+
+```c++
+template <class T>
+T Heap<T>::removeMin() {
+  // Swap with the last value
+  T minValue = item_[1];
+  std::swap( item_[1], item_[size_--] );
+  // Restore the heap property
+  _heapifyDown(1); // start with root node index = 1 (recursive calls inside)
+  // Return the minimum value
+  return minValue;
+}
+
+template <class T>
+void Heap<T>::_heapifyDown( unsigned index ) {
+  // Check index is not leaf; if so, finished
+  if ( !_isLeaf(index) ) {
+    // Select smallest child
+    T minChildIndex = _minChild(index);
+    // If parent larger than smallest child: swap
+    if ( item_[index] > item_[minChildIndex] ) {
+       std::swap( item_[index], item_[minChildIndex] );
+       // Recursive call: check swapped child
+       _heapifyDown( minChildIndex );
+    }
+  }
+}
+
+```
