@@ -1174,10 +1174,12 @@ Here is the list of steps to follow:
 2. We compare the new root against its children: if there is a smaller one, both are swapped; otherwise, we finished.
 3. We repeat step 2 with the swapped child. That process is commonly known as `heapifyDown()`.
 
-
 ![Heap: ](./pics/heap_array_example.jpeg)
 
 ![Heap: ](./pics/heap_remove_example.jpeg)
+
+In the following, example code from `./heap/Heap.hpp`.
+**Very important note**: `heapifyDown()` does not change anything if the node is leaf! This property is used later to build a hea given an unsorted array.
 
 ```c++
 template <class T>
@@ -1205,5 +1207,34 @@ void Heap<T>::_heapifyDown( unsigned index ) {
     }
   }
 }
-
 ```
+
+### 4.4 Heaps: `buildHeap()`
+
+The goal we have it build a heap given a string or a chain of characters/elements.
+Two naive approaches would be:
+
+1. Sort the array and we have the heap; but that takes are least `O(nlog(n))`.
+2. Given the array, start building a heap with `insert()`; that performs `heapifyUp()` several times. In other words, we execute `heapifyUp()` to each of the `n` nodes in the array, which costs `O(log(n))` for each, so altogether we need `O(nlog(n))`.
+
+A **third** more clever and faster approach is to **`heapifyDown()` starting from the very last node backwards**.
+However, note that:
+
+- The leaves are already balanced, i.e., no changes are done in them! Therefore, we will `heapifyDown()` effectively no more than half all the nodes (`n/2`).
+- Every time we `heapifyDown()` a node going backwards in the array we know that everything under that node is balanced. Therefore, we don't need to call `heapifyDown()` recursively downwards. Thus, the cost is constant time for each node.
+
+In summary, calling `heapifyDown()` non-recursively to `n/2` nodes (constant time for each) yields a complexity of `O(n)`!
+
+The corollary here is that given any array, we can build a heap representation of it in `O(n)`: that is very powerful.
+
+### 4.5 Heaps: Runtime Analysis, Heap Sort
+
+By using the presented operations of a heap, we can build a **heap sort** algorithm, which works in these steps:
+
+1. Given an unsorted array, we build a heap of it with `buildHeap()`: `O(n)`.
+2. We execute `removeMin()` `n` times to get the sorted array: `O(n*log(n))`.
+3. We swap elements, depending on whether we want an ascending/descending ordering: `O(n)`.
+
+That gives a total complexity of `O(n*log(n))`!
+
+**Additional advantage: everything is done in-memory, just swapping elements in the existing array!** However, recall we need a first element empty, in order to start at `i = 1`.
