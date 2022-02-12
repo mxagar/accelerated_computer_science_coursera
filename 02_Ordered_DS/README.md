@@ -1203,6 +1203,7 @@ void Heap<T>::_heapifyDown( unsigned index ) {
     if ( item_[index] > item_[minChildIndex] ) {
        std::swap( item_[index], item_[minChildIndex] );
        // Recursive call: check swapped child
+       // After swapping, minChildIndex contains the index node
        _heapifyDown( minChildIndex );
     }
   }
@@ -1223,9 +1224,12 @@ However, note that:
 - The leaves are already balanced, i.e., no changes are done in them! Therefore, we will `heapifyDown()` effectively no more than half all the nodes (`n/2`).
 - Every time we `heapifyDown()` a node going backwards in the array we know that everything under that node is balanced. Therefore, we don't need to call `heapifyDown()` recursively downwards. Thus, the cost is constant time for each node.
 
-In summary, calling `heapifyDown()` non-recursively to `n/2` nodes (constant time for each) yields a complexity of `O(n)`!
+In summary, calling `heapifyDown()` non-recursively to `n/2` nodes (constant time for each) yields a complexity of `O(n)`! Note that **it is essential for us not to call `heapifyDown()` recursively here**:
 
-The corollary here is that given any array, we can build a heap representation of it in `O(n)`: that is very powerful.
+- That is due to the fact we apply `heapifyDown()` upwards, thus, the subtrees below the node we're in have already been corrected, i.e., they a heaps!
+- The lack of recursive call makes this approach of constant time for each call! Thus, in total `O(n)`
+
+The corollary here is that given any array, **we can build a heap representation of it in `O(n)`**: that is very powerful.
 
 ### 4.5 Heaps: Runtime Analysis, Heap Sort
 

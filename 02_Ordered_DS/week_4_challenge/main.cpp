@@ -93,7 +93,30 @@ public:
 
 void downHeap(Node *n) {
 
-  // Implement downHeap() here.
+  if (n) { // not nullptr: Node n exists
+
+    Node *candidateMinNode = nullptr; // default: no min node; only leaves remain with nullptr
+    if (n->left && n->right) { // not nullptr: two children
+      candidateMinNode = n->left->value < n->right->value ? n->left : n->right;
+    } else if (!n->left && n->right) { // not nullptr: right child
+      candidateMinNode = n->right;
+    } else if (n->left && !n->right) { // left child
+      candidateMinNode = n->left;
+    } // else: no children: Leaf
+
+    if (candidateMinNode) { // not leaf, there is a candidate min node
+      // ensure heap property: if true, the candidate is a MIN node and needs to be swapped!
+      if (n->value > candidateMinNode->value) {
+        // swap values
+        int tmp = n->value;
+        n->value = candidateMinNode->value;
+        candidateMinNode->value = tmp;
+        // recursive call
+        downHeap(candidateMinNode);
+      } // if not min, we are done
+    }
+
+  }
 
 }
 
@@ -119,9 +142,8 @@ int main() {
 
   std::cout << "Compact printout:" << std::endl;
   printTree(n);
-  std::cout << std::endl << "Vertical printout:" << std::endl;
+  //std::cout << std::endl << "Vertical printout:" << std::endl;
   //printTreeVertical(n);
-  printTree(n);
 
   delete n;
   n = nullptr;
