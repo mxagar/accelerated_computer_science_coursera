@@ -25,21 +25,21 @@ A hash table needs to have:
 - an array to store values, indexed through the hashed keys
 - a collision handling strategy in case the hashing function yields non univocal mappings
 
-Note that in each cell of the table/array, we store the key, its hash and the data/value, no only the value. That is a way of keeping track of collisions that might arise when two different keys lead to the same hash.
+Note that in each cell of the table/array, we store the key, its hash and the data/value, not only the value. That is a way of keeping track of collisions that might arise when two different keys lead to the same hash.
 
 ### 1.2 Hash Function
 
-It is very difficult to create a good hash functions, so usually already existing ones are used; but one needs to understand their properties and how to analize them.
+It is very difficult to create good hash functions, so usually already existing ones are used; but one needs to understand their properties and how to analize them.
 #### Examples of Hash Functions
 
-- On-To-Function: considering `keys` are `s` strings, map them to indices `i = s[0] -'A' = 0, 1, ...`. However, two strings staring with the same letter collide, so we need to deal with that.
+- On-To-Function: considering `keys` are `s` strings, map them to indices `i = s[0] -'A' = 0, 1, ...`. However, two strings starting with the same letter collide, so we need to deal with that.
 - [Petals around the rose](https://en.wikipedia.org/wiki/Petals_Around_the_Rose): we throw 5 dice and count the number of "petals" or extrinsic dots of numbers that have a dot in the center ("roses": 1-3-5). Basically, we map a set of 5 numbers between 1-6 to another integer. However, odd numbers are not mapped and different sets of dice might lead to the same number of petals = collision.
 
 #### Properties
 
 A hash function `h()` must fulfill the following:
 
-- It mus map the key into an integer.
+- It must map the key into an integer.
 - The mapping must be as compressed as possible; that can be achieved with the `modulo` operator.
 
 A **good hash function** `h()` has 3 characteristics
@@ -63,7 +63,7 @@ In the following, we discuss two approaches to deal with hashing collisions:
 
 One way of dealing with collisions is **Separate Chaining**.
 With it, we basically define a linked list for each of the items or cells in the hash table.
-Every time there is a collision, we insert a new `key:value` with the colliding hash index to the front of the linked list.
+Every time there is a collision, we insert a new `key:value` with the colliding hash index to the **front** of the linked list. Since we insrt it in the front, insertion is `O(1)`: we don't look whether the list has already several items!
 
 However, finding/removing the data in the hash table becomes
 
@@ -83,7 +83,7 @@ See image...
 
 Two other (related) methods to deal with collisions are **linear probing** and **double hashing**.
 
-**Linear probing** consists in looking for the next free (circularly, if necessary) slot in the array/table whenever we have a collision; we start with the next cell to the hashed index and keep on. Recall that the hash table stores the key + hash + value.
+**Linear probing** consists in looking for the next free slot (circularly, if necessary) in the array/table whenever we have a collision; we start with the next cell to the hashed index and keep on. Recall that the hash table stores the key + value, and we know the hash from the index.
 
 So for the same example hash function as before, the updated version would be:
 
@@ -97,9 +97,9 @@ A solution to that is to perform **double hashing** instead of **linear probing*
 
 `try h(k) = (k + i*h2(k)) % 7, if full`, being `i = 0, 1, ...` the trial until a free slot is found and `h2(k)` the second hash function, for instance `h2(k) = 5 - k % 5`.
 
-That can be also written as:
+That can be also written as (sure, I think that's incorrect?):
 
-`h(k, i) = (h1(k) + i*h2(k)) % 5` with `h1(k) = k % 7`, `h2(k) = 5 - k % 5`.
+`h(k, i) = (h1(k) + i*h2(k)) % 7` with `h1(k) = k % 7`, `h2(k) = 5 - k % 5`.
 
 #### 1.3.3 Load Factor and Re-Hashing
 
@@ -120,11 +120,11 @@ As a convention, `alpha <= 0.6` leads to great performance, independently of the
 
 Some notes related to the performance of the hash tables and their applications
 
-- For big records, use linked lists, i.e., separate chains.
+- For big records (large cell sizes), use linked lists, i.e., separate chains.
 - If structure speed is the priority, use linear probing or double hashing.
 - Hash tables replace BST/AVL dictionaries:
   - AVL/BST have good nearest neighbor connectivity, and they should be used when that is important: nearest neighbors or range finding. Their look-up is `O(log(n))`.
-  - Hash table do not have good neighbor connectivity, but have `O(1)` look-up times; thus, we should use them when we expect many look-ups. Nearest neighbor search is `O(n)` in a hash table.
+  - Hash tables do not have good neighbor connectivity, but have `O(1)` look-up times; thus, we should use them when we expect many look-ups. Nearest neighbor search is `O(n)` in a hash table.
   - In summary, if all you care is look-up, go with the hash table.
 
 ## 1.5 Hash Tables in C++
