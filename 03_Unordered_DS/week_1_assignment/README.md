@@ -20,3 +20,13 @@ Topics covered:
     - `tests/week1_tests.cpp`: configuration of the test program.
 - For submission: `make zip` and upload
 
+## Notes from the Instructions: `std::unordered_map`, `std::pair`, Hashing, Memoization
+
+## Exercises
+
+### Exercise 1: `makeWordCounts`
+
+### Exercise 2: `lookupWithFallback`
+
+### Exercise 3: Memoizing a Function
+

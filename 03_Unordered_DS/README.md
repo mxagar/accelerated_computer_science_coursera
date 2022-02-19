@@ -11,6 +11,21 @@ Repository of the current notes: [mxagar/accelerated_computer_science_coursera](
 
 Overview of contents: 
 
+1. Week 1: Hashing
+   - 1.1 Introduction
+   - 1.2 Hash Function
+     - Examples of Hash Functions
+     - Properties
+   - 1.3 Collision Handling
+     - 1.3.1 Separate Chaining
+     - 1.3.2 Linear Probing and Double Hashing
+     - 1.3.3 Load Factor and Re-Hashing
+   - 1.4 Hashing Analysis
+   - 1.5 Hash Tables in C++
+   - 1.6 Week 1 Challenge: Linear Probing Inserting in a Hash Table
+   - 1.7 Week 1 Assignment: `std::unordered_map`
+2. Week 2
+
 ## Week 1: Hashing
 
 ### 1.1 Introduction
@@ -155,3 +170,16 @@ std::unordered_map::load_factor()
 std::unordered_map::max_load_factor()
 
 ```
+
+## 1.6 Week 1 Challenge: Linear Probing Inserting in a Hash Table
+
+See `./week_1_challenge/README.md`.
+
+## 1.7 Week 1 Assignment: `std::unordered_map`
+
+See `./week_1_assignment/README.md`.
+
+Many comments are written on that `README.md` related to the following topics:
+- `std::unordered_map`
+- `std::pair`
+- "memoization"
