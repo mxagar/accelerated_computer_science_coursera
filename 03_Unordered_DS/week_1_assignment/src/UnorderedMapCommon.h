@@ -99,7 +99,7 @@ bool wordCountComparator(const StringIntPair& x, const StringIntPair& y);
 StringIntPairVec sortWordCounts(const StringIntMap& wordcount_map);
 
 // -------------------------------------------------------------------------
-// makeWordCounts takes a vector of strings and counts the number of occurences
+// makeWordCounts takes a vector of strings and counts the number of occurrences
 // of each unique string.
 // NOTE: You will implement this function yourself in UnorderedMapExercises.cpp
 StringIntMap makeWordCounts(const StringVec& words);

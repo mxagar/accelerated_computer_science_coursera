@@ -53,10 +53,22 @@
 StringIntMap makeWordCounts(const StringVec& words) {
   StringIntMap wordcount_map;
 
+  //using StringVec = std::vector<std::string>;
+  //using StringIntPair = std::pair<std::string, int>;
+  //using StringIntMap = std::unordered_map<std::string, int>;
+  //using StringIntPairVec = std::vector<StringIntPair>;
+
   // =================================================
   // EXERCISE 1 WORKSPACE: YOUR CODE HERE
   // =================================================
 
+  for (auto& word: words) {
+    if (wordcount_map.count(word)>0) {
+      wordcount_map.at(word) += 1;
+    } else {
+      wordcount_map[word] = 1;
+    }
+  }
   return wordcount_map;
 }
 
@@ -101,7 +113,12 @@ int lookupWithFallback(const StringIntMap& wordcount_map, const std::string& key
   // EXERCISE 2 WORKSPACE: YOUR CODE HERE
   // =================================================
 
-  return -1337; // Change this!
+  StringIntMap::const_iterator found = wordcount_map.find(key);
+  if (found == wordcount_map.end())
+    return (fallbackVal);
+  else
+    return (found->second);
+
 }
 
 
@@ -214,7 +231,9 @@ int memoizedLongestPalindromeLength(LengthMemo& memo, const std::string& str, in
     // new in this case. So, we also won't store anything new in the table in
     // this case, only return what's already stored at this key in the map.
 
-    return -1337; // Hint: You need to change this!
+    LengthMemo::const_iterator found = memo.find(pairKey);
+    //return (memo[pairKey]); // Hint: You need to change this!
+    return (found->second); // Hint: You need to change this!
     // ====================================================================
 
   }
@@ -321,7 +340,16 @@ int memoizedLongestPalindromeLength(LengthMemo& memo, const std::string& str, in
   // =======================================================================
   // EXERCISE 3 - PART B - YOUR CODE HERE!
   //
-  return -1337; // Hint: You need to change this!
+  if (rightLimit-1 >= leftLimit) {
+    const IntPair pairKey_left = std::make_pair(leftLimit, rightLimit-1);
+    memo[pairKey_left] = leftSubproblemResult;
+  }
+  if (rightLimit >= leftLimit+1) {
+    const IntPair pairKey_right = std::make_pair(leftLimit+1, rightLimit);
+    memo[pairKey_right] = rightSubproblemResult;
+  }
+
+  return (greaterResult); // Hint: You need to change this!
   // =======================================================================
 }
 

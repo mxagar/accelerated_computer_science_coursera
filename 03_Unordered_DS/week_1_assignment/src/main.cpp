@@ -294,6 +294,7 @@ void palindromeTests() {
 
   // Which string to use for testing
   const std::string str = str_small;
+  //const std::string str = str_medium;
 
   // Larger examples may take an extremely long time for brute force.
   // A correct memoized algorithm can handle them all very quickly, though.
