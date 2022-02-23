@@ -24,7 +24,7 @@ Overview of contents:
    - 1.5 Hash Tables in C++
    - 1.6 Week 1 Challenge: Linear Probing Inserting in a Hash Table
    - 1.7 Week 1 Assignment: `std::unordered_map`
-2. Week 2
+2. Week 2: Disjoint Sets
 
 ## Week 1: Hashing
 
@@ -131,7 +131,7 @@ However, note that when we expand our hash table:
 
 As a convention, `alpha <= 0.6` leads to great performance, independently of the collision handling we use.
 
-## 1.4 Hashing Analysis
+### 1.4 Hashing Analysis
 
 Some notes related to the performance of the hash tables and their applications
 
@@ -142,7 +142,7 @@ Some notes related to the performance of the hash tables and their applications
   - Hash tables do not have good neighbor connectivity, but have `O(1)` look-up times; thus, we should use them when we expect many look-ups. Nearest neighbor search is `O(n)` in a hash table.
   - In summary, if all you care is look-up, go with the hash table.
 
-## 1.5 Hash Tables in C++
+### 1.5 Hash Tables in C++
 
 There are dictionary implementations in the C++ STL:
 
@@ -171,11 +171,11 @@ std::unordered_map::max_load_factor()
 
 ```
 
-## 1.6 Week 1 Challenge: Linear Probing Inserting in a Hash Table
+### 1.6 Week 1 Challenge: Linear Probing Inserting in a Hash Table
 
 See `./week_1_challenge/README.md`.
 
-## 1.7 Week 1 Assignment: `std::unordered_map`
+### 1.7 Week 1 Assignment: `std::unordered_map`
 
 See `./week_1_assignment/README.md`.
 
@@ -183,3 +183,65 @@ Many comments are written on that `README.md` related to the following topics:
 - `std::unordered_map`
 - `std::pair`
 - "memoization"
+
+## Week 2: Disjoint Sets
+
+### 2.1 Introduction to Disjoint Sets
+
+Disjoint sets are collections of elements with these two properties:
+
+1. they have **no element in common**
+2. and each set can have a number of elements, but they are **considered to be equivalent, indistinguishable**.
+
+For working with graphs (weeks 3 & 4), we are interested in defining effective algorithm for the following operations:
+
+- `set_id <- find(element_id)`: we want to find the `set_id` in which the element with `element_id` is located. Note that we differentiate between element `id` and set `id`; we want to 
+- `set_C <- union(set_A, set_B)`: we want to join to disjoint sets to form a new one.
+
+In fact, disjoint sets are also known as **union-find** data structures, because they are used primarily due to those important operations.
+
+To simplify:
+
+- We consider elements to be integers, thus, the `element_ids` are the integers themselves.
+- We consider the id of a set the first integer element of the set.
+
+![Disjoint sets: example](./pics/disjoint_sets_set_example.png)
+
+In the figure example:
+
+`set Oragnde := {2,5,9}; id = 2`
+`set Blue := {7}; id = 2`
+`set Purple := {0, 1, 4, 8}; id = 0`
+`set Yellow := {3, 6}; id = 3`
+
+From the definitions and properties:
+
+- We know that `find(4) == find(8) == 0`.
+- A disjoint set can be understood as a disjoint set of other disjoint sets, each one having a representative member.
+
+From the implementation perspective, we have the following interfaces:
+
+```c++
+void makeSet(const T& t);
+T& find(const T& k);
+void setUnion(const T& k1, const T& k2) {
+  if (find(k1) != find(k2)) {
+    // Note union is a reserved word in C++
+    union_(k1, k2);
+  }
+};
+```
+
+### 2.2 Disjoint Sets: A Naive Implementation
+
+Since the elements in the sets are unique and all sets are different, we can store them in an array, as shown in the image. For cases in which we don't have integers, we can either assign integers to the elements or use a hash map instead of an array.
+
+Recall that **the goal is to define the underlying data structure and efficient `find()` and `union()` functions**.
+
+**Version 1**: In the array, the index/key is the `element_id` and the cell content is the `set_id`.
+
+![Dijoint Sets: Naive Implementation](./pics/disjoint_sets_implementation_1.png)
+
+That version yields:
+- `find(k)` is `O(1)` (great), because the item is the array index, which returns the set id.
+- `union(k1,k2)` is `O(n)`, because we need to visit all the elements in the cell to make sure that the elements from set `k2` belong to `k1` now (or vice versa); we need to visit them all because we don't have the directional information from set -> element, only from element -> set.
