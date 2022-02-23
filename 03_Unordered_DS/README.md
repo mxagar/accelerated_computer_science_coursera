@@ -232,16 +232,36 @@ void setUnion(const T& k1, const T& k2) {
 };
 ```
 
-### 2.2 Disjoint Sets: A Naive Implementation
+### 2.2 Disjoint Sets: Implementations
 
 Since the elements in the sets are unique and all sets are different, we can store them in an array, as shown in the image. For cases in which we don't have integers, we can either assign integers to the elements or use a hash map instead of an array.
 
 Recall that **the goal is to define the underlying data structure and efficient `find()` and `union()` functions**.
 
-**Version 1**: In the array, the index/key is the `element_id` and the cell content is the `set_id`.
+**Version 1 (naive)**: In the array, the index/key is the `element_id` and the cell content is the `set_id`.
 
 ![Dijoint Sets: Naive Implementation](./pics/disjoint_sets_implementation_1.png)
 
 That version yields:
 - `find(k)` is `O(1)` (great), because the item is the array index, which returns the set id.
 - `union(k1,k2)` is `O(n)`, because we need to visit all the elements in the cell to make sure that the elements from set `k2` belong to `k1` now (or vice versa); we need to visit them all because we don't have the directional information from set -> element, only from element -> set.
+
+**Version 2 (better)**: In the array, the index/key is the `element_id` and the cell content is:
+
+- if the element is the representative element (e.g., the element that defines the `set_id`), the value `-1`,
+- otherwise, the value of the representative `element_id` in the set, also known as the **parent index**.
+
+This type of structure is called an **UpTree**. We keep representing such a tree with the array, but we draw a tree with parent and children nodes. The root or parent tree has a an upwards pointing arrow.
+
+In the following example, we have a disjoint set composed of four sets `{1}, {2}, {3}, {4}`. We union them step by step and the array values change accordingly: `union(0,3) -> union(1,2) -> union(0,1)`.
+
+![Dijoint Sets: UpTrees](./pics/disjoint_sets_implementation_2.png)
+
+The key idea is that when we do `union()`, we don't need to traverse the complete array to update all values as before (version 1); instead, we `find()` the `set_ids`, and change the pointer of one set to be under the other. 
+
+Therefore, this better version yields:
+
+- `find()` is still `O(1)`
+- `union()` is now `O(h) <= O(n)`: `h` is the height of the changed tree, which can look like a linked list. Basically, the worst case appears when we have a tree which looks like a linked list and we want to `find()` the deepest element in it to perform the `union()`: we need to go upwards `n` elements to find the parent index.
+
+**Version 3 (Improved UpTrees)**: 
