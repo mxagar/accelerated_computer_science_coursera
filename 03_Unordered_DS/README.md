@@ -238,7 +238,9 @@ Since the elements in the sets are unique and all sets are different, we can sto
 
 Recall that **the goal is to define the underlying data structure and efficient `find()` and `union()` functions**.
 
-**Version 1 (naive)**: In the array, the index/key is the `element_id` and the cell content is the `set_id`.
+#### Version 1: Naive
+
+In the array, the index/key is the `element_id` and the cell content is the `set_id`.
 
 ![Dijoint Sets: Naive Implementation](./pics/disjoint_sets_implementation_1.png)
 
@@ -246,22 +248,60 @@ That version yields:
 - `find(k)` is `O(1)` (great), because the item is the array index, which returns the set id.
 - `union(k1,k2)` is `O(n)`, because we need to visit all the elements in the cell to make sure that the elements from set `k2` belong to `k1` now (or vice versa); we need to visit them all because we don't have the directional information from set -> element, only from element -> set.
 
-**Version 2 (better)**: In the array, the index/key is the `element_id` and the cell content is:
+#### Version 2: UpTrees
+
+In the array, the index/key is the `element_id` and the cell content is:
 
 - if the element is the representative element (e.g., the element that defines the `set_id`), the value `-1`,
 - otherwise, the value of the representative `element_id` in the set, also known as the **parent index**.
 
 This type of structure is called an **UpTree**. We keep representing such a tree with the array, but we draw a tree with parent and children nodes. The root or parent tree has a an upwards pointing arrow.
 
-In the following example, we have a disjoint set composed of four sets `{1}, {2}, {3}, {4}`. We union them step by step and the array values change accordingly: `union(0,3) -> union(1,2) -> union(0,1)`.
+In the following example, we have a disjoint set composed of four sets `{1}, {2}, {3}, {4}`. We `union()` them step by step and the array values change accordingly: `union(0,3) -> union(1,2) -> union(0,1)`.
 
 ![Dijoint Sets: UpTrees](./pics/disjoint_sets_implementation_2.png)
 
 The key idea is that when we do `union()`, we don't need to traverse the complete array to update all values as before (version 1); instead, we `find()` the `set_ids`, and change the pointer of one set to be under the other. 
 
-Therefore, this better version yields:
+Even though this implementation is better, now both `find()` and `union()` are `O(h) <= O(n)`: `h` is the height of the changed tree, which can look like a linked list. Basically, the worst case appears when we have a tree which looks like a linked list and we want to `find()` the deepest element in it to perform the `union()`: we need to go upwards `n` elements to find the parent index.
 
-- `find()` is still `O(1)`
-- `union()` is now `O(h) <= O(n)`: `h` is the height of the changed tree, which can look like a linked list. Basically, the worst case appears when we have a tree which looks like a linked list and we want to `find()` the deepest element in it to perform the `union()`: we need to go upwards `n` elements to find the parent index.
+The code for `find()` would look like this:
 
-**Version 3 (Improved UpTrees)**: 
+```c++
+int find(k) {
+  if (set[k] < 0) return (k);
+  else find(set[k]);
+}
+```
+
+Since we have `O(h)`, one way of guaranteeing constant time is to make the trees as flat as possible, so that `h -> 0`; that would be our ideal tree. That is actually possible with **smart unions** and **path compression**.
+
+#### Version 3: UpTrees with Smart Union and Path Compression
+
+We can improve the introduced UpTrees with two ideas: Smart Unions and Path Compression.
+
+**Smart Unions** consist in storing structural information in the representative node, not just `-1`. Then, that information is used to perform unions that guarantee the height of the tree to be `log(n)`. Two approaches are possible:
+
+1. Union by height: the representative element (parent index) stores `-(h + 1)`. When we merge two trees, the tree (set) with the less negative value is merged under the one with the most negative one. That way, the deepest tree never grows deeper.
+2. Union by sizes: the representative element (parent index) stores `-size`, i.e., the number of elements in the set (in negative). Now, the union strategy is the same: the set with less negative parent index is merged under the one with the most negative value.
+
+Both approaches guarantee that the height of the tree is going to be `log(n)`.
+
+![Disjoint Sets: Uptrees - Smart Union](./pics/disjoint_sets_uptree_smart_union.png)
+
+**Path Compression** does not act in `union()`, but in `find()`. Every time we traverse a long/deep path while doing `find()` we re-attach all visited elements to the parent index.
+
+![Disjoint Sets: Uptrees - Path Compression](./pics/disjoint_sets_uptree_path_compression.png)
+
+That implementation leads to a performance of **iterative logarithm**. Iterative `log` or `log*` measures how many times can you compute the `log` of a number:
+
+```
+log*(n) = 
+    0,                  if n =< 1
+    1 + log*(log(n)),   n > 1
+
+Example: log*(2^65536) = 5
+2^65536 is NaN... so the log* of a huge number is 5.
+```
+
+Therefore, we can consider it to be close constant time. If we have a sequence of `m` `union()` and `find()` operations, we would have `O(mlog*(n))`. That is considered to be `O*(1)` for each operation: amortized constant time.
