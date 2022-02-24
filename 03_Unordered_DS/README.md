@@ -25,6 +25,13 @@ Overview of contents:
    - 1.6 Week 1 Challenge: Linear Probing Inserting in a Hash Table
    - 1.7 Week 1 Assignment: `std::unordered_map`
 2. Week 2: Disjoint Sets
+   - 2.1 Introduction to Disjoint Sets
+   - 2.2 Disjoint Sets: Implementations
+     - Version 1: Naive
+     - Version 2: UpTrees
+     - Version 3: UpTrees with Smart Union and Path Compression
+   - 2.3 Week 2 Challenge: Path Compression in an UpTree
+3. Week 3: Graph Data Structures
 
 ## Week 1: Hashing
 
@@ -305,3 +312,42 @@ Example: log*(2^65536) = 5
 ```
 
 Therefore, we can consider it to be close constant time. If we have a sequence of `m` `union()` and `find()` operations, we would have `O(mlog*(n))`. That is considered to be `O*(1)` for each operation: amortized constant time.
+
+
+### 2.3 Week 2 Challenge: Path Compression in an UpTree
+
+See `./week_2_challenge/README.md`.
+
+Very easy challenge: Path compression needs to be implemented in an UpTree. Basically, the array indices must be updated recursively once the parent node is found.
+
+Original, to be modified:
+
+```c++
+int DisjointSets::find(int i) {
+  if ( s[i] < 0 ) {
+    return i;
+  } else {
+    return find(s[i]);
+  }
+}
+```
+
+Path compression (solution):
+
+```c++
+int DisjointSets::find(int i) {
+  if ( s[i] < 0 ) {
+    return i;
+  } else {
+    int index = find(s[i]);
+    // Index is update recursively
+    // 'index' will contain the parent index
+    // since find() starts returning when s[i] < 0 is found
+    s[i] = index;
+    return index;
+  }
+}
+```
+
+## Week 3: Graph Data Structures
+

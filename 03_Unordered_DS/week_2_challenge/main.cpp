@@ -30,7 +30,9 @@ int DisjointSets::find(int i) {
   if ( s[i] < 0 ) {
     return i;
   } else {
-    return find(s[i]);
+    int index = find(s[i]);
+    s[i] = index;
+    return index;
   }
 }
 
@@ -42,7 +44,8 @@ int main() {
   d.s[5] = 7;
   d.s[7] = -1;
 
-  std::cout << "d.find(3) = " << d.find(3) << std::endl;
+  //std::cout << "d.find(3) = " << d.find(3) << std::endl;
+  std::cout << "d.find(1) = " << d.find(1) << std::endl;
   std::cout << "d.s(1) = " << d.s[1] << std::endl;
   std::cout << "d.s(3) = " << d.s[3] << std::endl;
   std::cout << "d.s(5) = " << d.s[5] << std::endl;
