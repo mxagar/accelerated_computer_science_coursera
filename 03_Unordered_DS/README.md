@@ -351,3 +351,60 @@ int DisjointSets::find(int i) {
 
 ## Week 3: Graph Data Structures
 
+Examples discussed:
+- Internet graph from 2003
+- University course graph
+  - Each course is a node
+  - If a student has two courses, an edge is drawn between the nodes
+  - Graph coloring problem:
+    - We want to find a schedule of exams for courses such that there is no time conflict for students
+    - The solution should color with the same color the nodes (course exams) that have the same time
+    - Nodes of the same color cannot be connected with and edge, otherwise there would be a student having two exams at the same time
+
+### 3.1 Graphs: Vocabulary & Notation
+
+![Graph Vocabulary 1](./pics/graph_vocabulary.png)
+
+A graph `G` is a collection of
+- Nodes = vertices, `V`; number of vertices: `n = |V|`; a vertex/node is represented as `v`.
+- Edges, `E`; number of edges: `m = |E|`; an edge can be represented with two vertices: `(v1,v2)`.
+
+A graph can be subdivided into subgraphs, that might be disconnected from one another: `G1, G2, G3`.
+The complete graph consists of all nodes/vertices and edges of all subgraphs.
+
+Further concepts:
+- Incident edges of a node/vertex `v`: `I(v) = {(x,v) in E}`: all edges that are directly connected to the node/vertex `v`.
+- Degree of a vertex/node: `|I|`: number of incident edges.
+- Adjacent vertices of node/vertex `v`: `A(v) = {x: (x,v) in E}`: vertices connected by an incident edge.
+- `Path(G1)`: sequence of vertices/nodes connected by edges.
+- `Cycle(G1)`: path with common begin and end vertex (a loop).
+- Simple graph: a graph with
+  - No self loops: there is no direct edge from a vertex/node to itself. 
+  - No multi-edges: between two nodes/vertices there is only one edge.
+
+Concepts that are introduced later:
+- Complete subgraph
+- Connected subgraph
+- Connected component
+- Acyclic subgraph
+- Spanning tree
+
+![Graph Vocabulary 2](./pics/graph_vocabulary_2.png)
+
+Lower and upper bound of elements: we have a graph with `n` vertices and `m` edges:
+- Minimum edges
+  - Not connected graph: 0, because nodes/vertices can be without edges between them
+  - Connected graph: `n-1`, because a path must be possible from any node/vertex to another
+- Maximum edges
+  - Simple graph (max. one dge between direct/adjacent nodes, no self-edges): `n * (n-1) / 2`
+  - Not simple graph: `inf`, because we can have infinite number of edges between a single pair of vertices
+- Sum of the degrees of all the nodes: `2m`, because all edges are counted twice, since we sum the degrees all nodes, and an edge connects two every time.
+
+![Graph Vocabulary 3: Lower and Upper Bound of Elements](./pics/graph_vocabulary_3.png)
+
+### 3.2 Graph ADT (Abstract Data Structure)
+
+
+
+![Graphs: Abstract Data Structure (ADT)](./pics/graphs_adt.png)
+
