@@ -374,7 +374,7 @@ The complete graph consists of all nodes/vertices and edges of all subgraphs.
 
 Further concepts:
 - Incident edges of a node/vertex `v`: `I(v) = {(x,v) in E}`: all edges that are directly connected to the node/vertex `v`.
-- Degree of a vertex/node: `|I|`: number of incident edges.
+- Degree of a vertex/node: `dgv(v) = |I(v)|`: number of incident edges.
 - Adjacent vertices of node/vertex `v`: `A(v) = {x: (x,v) in E}`: vertices connected by an incident edge.
 - `Path(G1)`: sequence of vertices/nodes connected by edges.
 - `Cycle(G1)`: path with common begin and end vertex (a loop).
@@ -412,7 +412,7 @@ The following image describes the ADT of a graph, the contained data and the fun
 - Functions
   - `insertVertex(key)`
   - `insertEdge(v1,v2,key)`
-  - `removeVertex(v)`
+  - `removeVertex(v)`: we consider also removing the associated edges.
   - `removeEdge(v1,v2)`
   - `incidentEdges(v)`
   - `areAdjacent(v1,v2)`
@@ -434,9 +434,53 @@ Note that there is an errata: `removeVertex()` is `O(m)`, because we need to go 
 
 ![Graph Implementation: Edge List](./pics/graph_implementation_edge_list.png)
 
-We see that except `insertVertex()`, which is `O(1)`, all the other operations are `O(m)`, that is we need to traverse all edges to execute them. That is not desirable always. In some cases, the edge list implementation is the correct one, though.
+We see that except `insertVertex()`, which is `O(1)*` (amortized, because we may want to expand the list), all the other operations are `O(m)`, that is, we need to traverse all edges to execute them. That is not desirable always. In some cases, the edge list implementation is the correct one, though.
 
-### Graphs: Second Implementation -- Adjacency Matrix Implementation
+### 3.4 Graphs: Second Implementation -- Adjacency Matrix Implementation
+
+This is a more advanced implementation that builds up on the previous one (edge list implementation).
+
+In this case, we have the previous two data structures:
+- A list of vertices
+- A list of edges
+
+... and, additionally, we have an adjacency matrix being vertex-vs-vertex, which stores:
+- `0` if the vertices are not connected, 
+- or the pointer to the edge list if the vertices are connected.
+
+Note that the matrix is symmetric -- we use one the upper diagonal.
+
+![Graph Implementation: Adjacency Matrix](./pics/graph_implementation_adjacency_matrix.png)
+
+The function runtime changes now:
+
+- `insertVertex()` becomes `O(n)`, because every time we inssert a vertex we need to add a row+column to the matrix with correct values-
+- `removeVertex` is `O(n)`, analogously
+- `areAdjacent()` is `O(1)` thanks to the adjacency matrix.
+- `incidentEdges()`: `O(n)`; we need to look the entire row and column of the vertex.
+
+We see that this implementation is very useful when `areAdjacent` is very important.
 
 
+### 3.5 Graphs: Third Implementation -- Adjacency List Implementation
+
+This is the most advanced implementation and it builds up on the previous ones.
+
+Here too, we have:
+- A list of vertices
+- A list of edges
+
+However, we extend them to contain the following structures:
+
+- The list of vertices has a **liked list of the edges incident to it**; each node of the linked list is a pointer to the edge in the edge list.
+- The list of edges contains the pointers of the vertices associated with each edge; the pointers point to the edge node in the vertex list, not the vertex itself.
+
+![Graph Implementation: Adjacency List](./pics/graph_implementation_adjacency_list.png)
+
+This data structure contains many pointers and it is more complicated to implement, but it achieves great running times:
+
+- `insertVertex()`: `O(1)*`
+- `removeVertex()`: `O(deg(v))`, because we remove the vertex and all incient edges, which are collected in the linked list of the vertex list and amount to `deg(v)`.
+- `areAdjacent(v1,v2)`: `O(min(deg(v1),deg(v2)))`, we check whether any of the incident edges of v1 or v2 connects to the other. The vertex with least incident edges is analyzed. 
+- `incidentEdges(v)`: `O(deg(v))`
 
