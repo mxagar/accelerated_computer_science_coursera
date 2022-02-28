@@ -484,3 +484,13 @@ This data structure contains many pointers and it is more complicated to impleme
 - `areAdjacent(v1,v2)`: `O(min(deg(v1),deg(v2)))`, we check whether any of the incident edges of v1 or v2 connects to the other. The vertex with least incident edges is analyzed. 
 - `incidentEdges(v)`: `O(deg(v))`
 
+### 3.6 Graphs: Implementation Comparison
+
+The following table summarizes the runtime of the different implementations (as well as the required memory space):
+
+![Graphs Implementation: Runtime Comparison](./pics/graph_implementation_runtime_comparison.png)
+
+There is not a best implementation, but we need to consider all of them depending on what we want to do with our graph:
+
+- The adjacency matrix is the best option if `areAdjacent()` is important.
+- In other cases, the adjacency list seems to be the best option.
