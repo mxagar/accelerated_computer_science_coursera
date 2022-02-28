@@ -404,7 +404,39 @@ Lower and upper bound of elements: we have a graph with `n` vertices and `m` edg
 
 ### 3.2 Graph ADT (Abstract Data Structure)
 
-
+The following image describes the ADT of a graph, the contained data and the functions:
+- Data
+  - Sequence of vertices
+  - Sequence of edges
+  - Structure between vertices and edges
+- Functions
+  - `insertVertex(key)`
+  - `insertEdge(v1,v2,key)`
+  - `removeVertex(v)`
+  - `removeEdge(v1,v2)`
+  - `incidentEdges(v)`
+  - `areAdjacent(v1,v2)`
+  - `origin(e)`: although it was not mentioned until now, note that edges can be directional! Thus, they have a start edge and an end edge.
+  - `destination(e)`
 
 ![Graphs: Abstract Data Structure (ADT)](./pics/graphs_adt.png)
+
+### 3.3 Graphs: First Implementation -- Edge-List Implementation
+
+This is a very first naive implementation.
+
+We have two lists maintained in a vector or a hash table:
+- A list of vertices
+- A list of edges
+
+The representation of this implementation is in the following figure.
+Note that there is an errata: `removeVertex()` is `O(m)`, because we need to go through all edges to find the ones related to the removed vertex!
+
+![Graph Implementation: Edge List](./pics/graph_implementation_edge_list.png)
+
+We see that except `insertVertex()`, which is `O(1)`, all the other operations are `O(m)`, that is we need to traverse all edges to execute them. That is not desirable always. In some cases, the edge list implementation is the correct one, though.
+
+### Graphs: Second Implementation -- Adjacency Matrix Implementation
+
+
 
