@@ -53,3 +53,70 @@ See the Week 2 assignment.
 Hash functions are defined extending `std::hash` for both.
 
 ### Adjacency Lists: `GridGraph`
+
+Instead of creating the adjacency list using pointers, STL containers are used, following this scheme:
+
+- Each vertex object has a unique key. We create a map where each vertex has a separate entry based on its own key.
+- 
+- Each vertex should be mapped to a set of other keys, one key for each adjacent vertex (connected by an edge, implicitly).
+
+See `GridGraph.h`.
+
+#### `GridGraph`
+
+`GridGraph` is an undirected graph on a 2D grid with 2D points as vertices. It has the following properties:
+
+- A vertex is an `IntPair`: `row, column`.
+- Edges are only horizontal or vertical (i.e., unit distance allowed only).
+- Isolated points (i.e., without edges) are possible.
+- We can plot them with `plot()` or `<<`.
+- Edges are not explicitly defined, but they are represented with two `IntPairs` or an `IntPairPair`. However, note that `IntPairPair` hashes differently a pair of points with different order, even though they represent the same edge! That needs to be taken into account manually when counting edges...
+
+Some members of `GridGraph`:
+
+```c++
+// Adjancency set: each vertex has one set of neighbor vertices
+using NeighborSet = std::unordered_set<IntPair>;
+// Adjacency map: list of vertices with their neighbor/adjacent vertices
+// i.e., connected with an edge.
+// If vertex X has adjacent Y, the reverse must be also true
+// If a key exists, the point exists
+std::unordered_map<IntPair, GridGraph::NeighborSet> adjacencyMap;
+// A key is created with [p]
+insertPoint(const IntPair& p);
+// A key is created and a neighbor vertex is inserted with [p1].insert(p2);
+insertEdge(const IntPair& p1, const IntPair& p2);
+// Only horizontal/vertical edges allowed
+checkUnitDistance(const IntPair& p1, const IntPair& p2);
+// Erase point / edge
+removeEdge(const IntPair& p1, const IntPair& p2);
+removePoint(const IntPair& p1);
+// Does graph contain this point / edge
+hasPoint(const IntPair& p);
+hasEdge(const IntPair& p1, const IntPair& p2);
+// Count
+countVertices();
+countEdges();
+// Plot
+plot();
+```
+
+### Graph Search Algorithms
+
+Note that many problems could be modelled as graphs: puzzle solving (e.g., rubik's cube), path finding on maps, etc.
+
+Breadth-First-Search (BFS) is used. List of search algorithms that work on both directed and undirected graphs:
+
+- Breadth-First-Search (BSF): used for shortest path detection, if all edges have same length/weight. The algorithm works expanding the frontier of search; length-1 vertices are visited before length-2 ones.
+- Dijkstra's algorithm: also for shortest paths, but with different edge lengths or weights.
+- Depth-First-Search (DFS): It could be used for shortest path search.
+- A*: similar to Dijkstra's algorithm, but a heuristic is used to guess which nodes to try next. A* and its improved versions are common when graphs describe states (vertices) and transitions (edges) between them, because we can simplify the search when the space of states is very large (as commonly happens).
+- Bellman-Ford: similar to BFS; slower and requires more memory, but negative lengths allowed.
+
+## Exercises: `GraphSearchExercises.cpp`
+
+### Exercise 1
+
+`GridGraph::countEdges()`
+
+`GridGraph::removePoint()`
