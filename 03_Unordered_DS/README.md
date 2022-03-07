@@ -496,3 +496,76 @@ There is not a best implementation, but we need to consider all of them dependin
 
 - The adjacency matrix is the best option if `areAdjacent()` is important.
 - In other cases, the adjacency list seems to be the best option.
+
+### 3.7 Week 3 Challenge: Union of Graphs Represented as Disjoint Sets
+
+See `./week_3_challenge/README.md`.
+
+I had to re-read several sections and teh instructions to complete the challenge, because I thought it was more complicated -- it was at the end quite easy.
+
+Original, to be modified:
+
+```c++
+// TASK 1:
+// dsunion performs disjoint set union. The reported leader of vertex j
+// will become the leader of vertex i as well.
+// Assuming it is only called once per pair of vertices i and j,
+// it can detect when a set is including an edge that completes a cycle.
+// This is evident when a vertex is assigned a leader that is the same
+// as the one it was already assigned previously.
+// Also, if you join two sets where either set already was known to
+// have a cycle, then the joined set still has a cycle.
+// Modify the implementation of dsunion below to properly adjust the
+// has_cycle array so that query_cycle(root_j) accurately reports
+// whether the connected component of root_j contains a cycle.
+void DisjointSets::dsunion(int i, int j) {
+  bool i_had_cycle = query_cycle(i);
+  bool j_had_cycle = query_cycle(j);
+  int root_i = find_leader(i);
+  int root_j = find_leader(j);
+  if (root_i != root_j) {
+    // New vertex added to components with edge
+    leader[root_i] = root_j;
+    root_i = root_j;
+  }
+  else {
+    // A cycle is detected when dsunion is performed on an edge
+    // where both vertices already report the same set leader.
+    // TODO: Your work here! Update has_cycle accordingly.
+    has_cycle[root_j] = true;
+  }
+
+  // Also, if either one of the original sets was known to have a cycle
+  // already, then the newly joined set still has a cycle.
+  // TODO: Your work here!
+  if (i_had_cycle || j_had_cycle)
+    has_cycle[root_j] = true;
+
+}
+
+// TASK 2:
+// count_comps should count how many connected components there are in
+// the graph, and it should set the num_components member variable
+// to that value. The input n is the number of vertices in the graph.
+// (Remember, the vertices are numbered with indices 0 through n-1.)
+void DisjointSets::count_comps(int n) {
+
+  // Insert code here to count the number of connected components
+  // and store it in the "num_components" member variable.
+  // Hint: If you've already performed set union on all the apparent edges,
+  //  what information can you get from the leaders now?
+
+  // TODO: Your work here!
+  int count = 0;
+  for (int i = 0; i < n; ++i) {
+    if (leader[i] < 0) count++;
+  }
+
+  num_components = count;
+
+}
+```
+
+### 3.8 Week 3 Assignment
+
+
