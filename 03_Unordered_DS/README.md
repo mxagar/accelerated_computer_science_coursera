@@ -374,13 +374,15 @@ The complete graph consists of all nodes/vertices and edges of all subgraphs.
 
 Further concepts:
 - Incident edges of a node/vertex `v`: `I(v) = {(x,v) in E}`: all edges that are directly connected to the node/vertex `v`.
-- Degree of a vertex/node: `dgv(v) = |I(v)|`: number of incident edges.
+- Degree of a vertex/node: `deg(v) = |I(v)|`: number of incident edges.
 - Adjacent vertices of node/vertex `v`: `A(v) = {x: (x,v) in E}`: vertices connected by an incident edge.
 - `Path(G1)`: sequence of vertices/nodes connected by edges.
 - `Cycle(G1)`: path with common begin and end vertex (a loop).
 - Simple graph: a graph with
   - No self loops: there is no direct edge from a vertex/node to itself. 
   - No multi-edges: between two nodes/vertices there is only one edge.
+- Connected graph: all vertices/nodes have a path connecting them.
+- Connected component: a subgraph which is a connected graph.
 
 Concepts that are introduced later:
 - Complete subgraph
@@ -396,9 +398,9 @@ Lower and upper bound of elements: we have a graph with `n` vertices and `m` edg
   - Not connected graph: 0, because nodes/vertices can be without edges between them
   - Connected graph: `n-1`, because a path must be possible from any node/vertex to another
 - Maximum edges
-  - Simple graph (max. one dge between direct/adjacent nodes, no self-edges): `n * (n-1) / 2`
+  - Simple graph (max. one edge between direct/adjacent nodes, no self-edges): `n * (n-1) / 2`
   - Not simple graph: `inf`, because we can have infinite number of edges between a single pair of vertices
-- Sum of the degrees of all the nodes: `2m`, because all edges are counted twice, since we sum the degrees all nodes, and an edge connects two every time.
+- Sum of the degrees of all the nodes: `2m`, because all edges are counted twice, since we sum the degrees of all nodes, and an edge connects two every time.
 
 ![Graph Vocabulary 3: Lower and Upper Bound of Elements](./pics/graph_vocabulary_3.png)
 
@@ -454,7 +456,7 @@ Note that the matrix is symmetric -- we use one the upper diagonal.
 
 The function runtime changes now:
 
-- `insertVertex()` becomes `O(n)`, because every time we inssert a vertex we need to add a row+column to the matrix with correct values-
+- `insertVertex()` becomes `O(n)`, because every time we insert a vertex we need to add a row+column to the matrix with correct values-
 - `removeVertex` is `O(n)`, analogously
 - `areAdjacent()` is `O(1)` thanks to the adjacency matrix.
 - `incidentEdges()`: `O(n)`; we need to look the entire row and column of the vertex.
