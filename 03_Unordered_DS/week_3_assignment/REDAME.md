@@ -190,3 +190,21 @@ Note that in practice, we would have opted for another implementation, rather th
 See solution in `GraphSearchExercises.cpp`. The function is easy but interesting. The exercise is even easier, because some minor lines needed to be added. The task was more about reading and understanding the code.
 
 ### Exercise 3: `puzzleBFS()`
+
+Graph modelling is performed to solve a puzzle, i.e., we represent or model the problem with a graph and use BFS to solve it.
+
+"8-puzzle": 3x3 grid with 8 tiles, one blank/empty. We can slide tiles to the contiguous empty space. We ge a start configuration with unordered tiles with numbers; the goal is to move the least amount of tiles possible to obtain the ordered final configuration `[1 2 3; 4 5 6; 7 8 _] = [1, 2, 3, 4, 5, 6, 7, 8, 9]`.
+
+The implementation is done in `puzzleBFS()`, which is equivalent to the `graphBFS()`, but modified to work with `PuzzleState`.
+
+Some details:
+
+- `std::array<int, 9>` is used to represent a state: like an `std::vector` but with fixed size 9.
+- Any state of the puzzle is a vertex in the graph. Possible single moves are edges, which connect different possible contiguous states.
+- Movements are implemented as swapping the blank tile `9`.
+- Since adjacent states can be calculated implicitly, we don't need an adjacency map.
+- We don't need to have a list of all vertices that exist; but we label the one we visit (with sets).
+- Sliding rules and maximum number of movements are already implemented.
+
+See solution in `GraphSearchExercises.cpp`. The solution is very similar to the one in the previous Exercise 2. Here, the interesting part is the fact of modelling the problem to a graph.
+
