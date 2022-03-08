@@ -115,7 +115,7 @@ Breadth-First-Search (BFS) is used. List of search algorithms that work on both 
 
 ## Exercises: `GraphSearchExercises.cpp`
 
-### Exercise 1
+### Exercise 1: `countEdges()`, `removePoint()`
 
 Implement the following functions:
 
@@ -171,3 +171,22 @@ void GridGraph::removePoint(const IntPair& p1) {
 }
 
 ```
+
+### Exercise 2: `graphBFS()`
+
+Finish the missing small parts from `graphBFS()`, which performs a Breadth-First-Search (BFS).
+
+Details of the implementation in contrast to pseudocode in theory:
+
+- Goal: shortest path between two points.
+- Labelling of visited points is implemented with `std::unordered_set<IntPair>`.
+- Exploring = visiting = discovering = stepping to a successor of a point/node/vertex.
+- We store predecessor nodes in an `std::unordered_map pred`: this encodes implicitly the edges of the path.
+- `dist` is used to record the shortest path.
+- A dequeued set of vertices is also used to avoid mistakes and infinite loops.
+
+Note that in practice, we would have opted for another implementation, rather than BFS, such as any of the improved/modified versions of A*.
+
+See solution in `GraphSearchExercises.cpp`. The function is easy but interesting. The exercise is even easier, because some minor lines needed to be added. The task was more about reading and understanding the code.
+
+### Exercise 3: `puzzleBFS()`
