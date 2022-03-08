@@ -40,6 +40,7 @@ Overview of contents:
    - 3.6 Graphs: Implementation Comparison
    - 3.7 Week 3 Challenge: Union of Graphs Represented as Disjoint Sets
    - 3.8 Week 3 Assignment: Breadth-First-Search in a Graph
+4. Week 4: Graph Algorithms
 
 ## Week 1: Hashing
 
@@ -587,3 +588,5 @@ Many comments are written on that `README.md` related to the following topics:
   - Exercise 1: `countEdges()`, `removePoint()`
   - Exercise 2: `graphBFS()`
   - Exercise 3: `puzzleBFS()`
+
+## 4. Week 4: Graph Algorithms
