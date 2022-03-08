@@ -32,6 +32,14 @@ Overview of contents:
      - Version 3: UpTrees with Smart Union and Path Compression
    - 2.3 Week 2 Challenge: Path Compression in an UpTree
 3. Week 3: Graph Data Structures
+   - 3.1 Graphs: Vocabulary & Notation
+   - 3.2 Graph ADT (Abstract Data Structure)
+   - 3.3 Graphs: First Implementation -- Edge-List Implementation
+   - 3.4 Graphs: Second Implementation -- Adjacency Matrix Implementation
+   - 3.5 Graphs: Third Implementation -- Adjacency List Implementation
+   - 3.6 Graphs: Implementation Comparison
+   - 3.7 Week 3 Challenge: Union of Graphs Represented as Disjoint Sets
+   - 3.8 Week 3 Assignment: Breadth-First-Search in a Graph
 
 ## Week 1: Hashing
 
@@ -566,6 +574,16 @@ void DisjointSets::count_comps(int n) {
 }
 ```
 
-### 3.8 Week 3 Assignment
+### 3.8 Week 3 Assignment: Breadth-First-Search in a Graph
 
+See `./week_3_assignment/README.md`.
 
+Many comments are written on that `README.md` related to the following topics:
+- `std::unordered_set`
+- `IntPair2.h`
+- Adjacency Lists: `GridGraph`
+- Graph Search Algorithms: Breadth-First-Search (BFS), etc.
+- Exercises
+  - Exercise 1: `countEdges()`, `removePoint()`
+  - Exercise 2: `graphBFS()`
+  - Exercise 3: `puzzleBFS()`

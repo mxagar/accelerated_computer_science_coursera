@@ -3,7 +3,16 @@
 Notes extracted from the instructions and while completing the assignment.
 
 Topics covered:
-
+- General Instructions
+- Notes from the Intructions
+  - `std::unordered_set`
+  - `IntPair2.h`
+  - Adjacency Lists: `GridGraph`
+  - Graph Search Algorithms: Breadth-First-Search (BFS), etc.
+- Exercises
+  - Exercise 1: `countEdges()`, `removePoint()`
+  - Exercise 2: `graphBFS()`
+  - Exercise 3: `puzzleBFS()`
 
 ## General instructions
 
