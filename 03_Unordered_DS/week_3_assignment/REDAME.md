@@ -121,3 +121,53 @@ Implement the following functions:
 
 - `GridGraph::countEdges()`: take into account that edges are not stored, but neighbor vertices; thus, we double count them if we just count the neighbors. Look at `GridGraph::printDetails` for an alternative.
 - `GridGraph::removePoint(IntPair)`: point and all references (neighbors / edges) erased.
+
+```c++
+int GridGraph::countEdges() const {
+  int numEdges = 0;
+  if (adjacencyMap.empty()) {
+    return (0);
+  }
+  std::unordered_set<IntPairPair> edgeSet;
+  // Loop over key-value pairs
+  for (const auto& kv : adjacencyMap) {
+    // key: point
+    const auto& p1 = kv.first;
+    // value: neighbor point set
+    const auto& p1_neighbors = kv.second;
+    if (!p1_neighbors.empty()) {
+      // edge (A,B) == (B,A)
+      // we can take care of this ordering A & B
+      // and inserting to the set the ascending sequence always
+      // (a set inserts only new and unique items)
+      // note that "<" is possible because it is defined for std::pair<int,int>
+      for (const auto& p2 : p1_neighbors) {
+        IntPairPair edge;
+        if (p1 < p2) {
+          edge = std::make_pair(p1,p2);
+        }
+        else {
+          edge = std::make_pair(p2,p1);
+        }
+        edgeSet.insert(edge);
+      }
+    }
+  }
+  return (edgeSet.size());
+}
+
+void GridGraph::removePoint(const IntPair& p1) {
+  if (!hasPoint(p1)) return;
+  // Security: make a copy of the container we're modifying and iterating simultaneously
+  const GridGraph::NeighborSet originalNeighbors = adjacencyMap.at(p1);
+  // Recall:
+  // using NeighborSet = std::unordered_set<IntPair>;
+  // std::unordered_map<IntPair, GridGraph::NeighborSet> adjacencyMap;
+  for (const auto& kv : originalNeighbors) {
+    // key: point / IntPair
+    adjacencyMap.at(kv).erase(p1);
+  }
+  adjacencyMap.erase(p1);
+}
+
+```
