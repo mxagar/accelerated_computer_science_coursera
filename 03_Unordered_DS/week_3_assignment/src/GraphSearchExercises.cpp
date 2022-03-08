@@ -52,8 +52,40 @@ int GridGraph::countEdges() const {
   // =======================================================================
   // TODO: Your code here!
   // =======================================================================
+  if (adjacencyMap.empty()) {
+    return (0);
+  }
 
-  return numEdges;
+  std::unordered_set<IntPairPair> edgeSet;
+
+  // Loop over key-value pairs
+  for (const auto& kv : adjacencyMap) {
+    // key: point
+    const auto& p1 = kv.first;
+    // value: neighbor point set
+    const auto& p1_neighbors = kv.second;
+
+    if (!p1_neighbors.empty()) {
+      // edge (A,B) == (B,A)
+      // we can take care of this ordering A & B
+      // and inserting to the set the ascending sequence always
+      // (a set inserts only new and unique items)
+      // note that "<" is possible because it is defined for std::pair<int,int>
+      for (const auto& p2 : p1_neighbors) {
+        IntPairPair edge;
+        if (p1 < p2) {
+          edge = std::make_pair(p1,p2);
+        }
+        else {
+          edge = std::make_pair(p2,p1);
+        }
+        edgeSet.insert(edge);
+      }
+    }
+  }
+
+  return (edgeSet.size());
+
 }
 
 // GridGraph::removePoint:
@@ -93,6 +125,15 @@ void GridGraph::removePoint(const IntPair& p1) {
   // TODO: Your code here!
   // =======================================================================
 
+  // using NeighborSet = std::unordered_set<IntPair>;
+  // std::unordered_map<IntPair, GridGraph::NeighborSet> adjacencyMap;
+
+  // Loop over key-value pairs
+  for (const auto& kv : originalNeighbors) {
+    // key: point / IntPair
+    adjacencyMap.at(kv).erase(p1);
+  }
+
   // Finally, for the one point we are removing, erase the point key itself
   // from adjacencyMap directly. (There is no other GridGraph helper function
   // for this, because that's what we're implementing right now! We need to
@@ -101,6 +142,7 @@ void GridGraph::removePoint(const IntPair& p1) {
   // =======================================================================
   // TODO: Your code here!
   // =======================================================================
+  adjacencyMap.erase(p1);
 }
 
 // =========================================================================

@@ -117,6 +117,7 @@ Breadth-First-Search (BFS) is used. List of search algorithms that work on both 
 
 ### Exercise 1
 
-`GridGraph::countEdges()`
+Implement the following functions:
 
-`GridGraph::removePoint()`
+- `GridGraph::countEdges()`: take into account that edges are not stored, but neighbor vertices; thus, we double count them if we just count the neighbors. Look at `GridGraph::printDetails` for an alternative.
+- `GridGraph::removePoint(IntPair)`: point and all references (neighbors / edges) erased.
