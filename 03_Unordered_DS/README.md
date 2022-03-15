@@ -590,3 +590,77 @@ Many comments are written on that `README.md` related to the following topics:
   - Exercise 3: `puzzleBFS()`
 
 ## 4. Week 4: Graph Algorithms
+
+### 4.1 Graph Traversal
+
+Traversal means visiting every single vertex/node of a graph exactly once. We can let us inspire by trees, however, graphs differ from trees in significant ways:
+
+- Trees are ordered, graphs not
+- Trees have an obvious start, graphs don't
+- Trees have a notion of completeness, graphs don't
+
+#### 4.1.1 Breadth-First Search Traversal (BFS)
+
+Assuming we know all the adjacent nodes of each node, we use a queue (FIFO) to help us visit all nodes in a breadth-first manner:
+
+1. We push a first node A to it.
+2. We pop the next node from it: A.
+3. We mark popped node A as visited in the list of nodes.
+4. We push to the queue all adjacent nodes of the popped A which are not marked as visited or are not in the queue: B, C, D.
+5. We pop next node (B) and repeat steps 2-5 until there is no node in the queue.
+
+![Graphs: Breadth-First Search Traversal](./pics/graphs_bfs_traversal.png)
+
+Notes:
+
+- It is called Breadth-First because we discover all adjacent nodes progressively.
+- No matter the order in which we push the adjacent nodes, we always visit all the nodes.
+- **However, the order in which we push the nodes discovers a different substructure** related to the discovery of the nodes. That substructure is created by labelling the edges as *discovery* (often marked with thick lines) is they lead to a new node, *cross edge* otherwise (often marked with light lines). We are going to use that structure that tells how the nodes were discovered.
+- Note that a *cross* edge is actually a cycle!
+
+Pseudocode of the BFS traversal algorithm that visits all nodes and returns the discovery structure:
+
+![Graphs: Breadth-First Search Traversal Pseudocode](./pics/graphs_bfs_traversal_pseudocode.png)
+
+Note that the pseudo code has two parts:
+
+- `BFS(G)`: main algorithm; after resetting all vertices/edges to be *UNEXPLORED*, all *UNEXPORED* vertices are processed by the second part: `BFS(G, v)`. Since that second part performs the breadth-first seach on the connected component, we can count components (disjoint subgraphs) in `BFS(G)` whenever we jump to the next *UNEXPLORED* vertex!
+- `BFS(G, v)`: the breadth-first search is performed as described above: we pupulate a queue with *UNEXPLORED* nodes and mark them and edges accordingly.
+- We can compute also the number of cycles simply by counting them whenever a *cross edge* is discovered.
+
+##### Running time
+
+We can conclude it from the pseudocode:
+
+- We visit each node once: `n`
+- For each node, we visit all the adjacent nodes, ans as we already defined: `sum(deg(v)) = 2m`
+
+Thus, the running time is `O(n + m)`. Note that
+
+- `m` is going to be often similar to `n`, so the algorithm will run in linear time
+- **BUT**: it might happen that `m = n^2` in case we have a fully connected graph! (I.e., each node is connected to all the other nodes)
+
+##### Properties of the Discovery Structure = Spanning Tree
+
+The discovery structure is a **spanning tree**: it spans the entire graph in a single tree and thanks to it we can travel to all the nodes.
+
+That spanning tree is encoded in the node-adjacency list by adding two columns:
+
+- `p, predecessor`: for each vertex, we store its parent vertex in the spanning tree, which forms a *discovery* edge.
+- `d, depth`: number of *discovery* edges since the first node.
+
+Some properties of the spanning tree:
+
+- We can compute the shortest path from the root or starting node to any of the other nodes.
+- However, we cannot compute the shortest path from any node to another any node (bacause the shortest path might contain *cross* edges, which are not in the spanning tree).
+- If we follow a *cross* edge, we won't get more than one further from our start or root.
+
+![Graphs: Spanning Tree obtained from BFS](./pics/graphs_bfs_spanning_tree.png)
+
+#### 4.1.2 Depth-First Search Traversal (DFS)
+
+
+### 4.2 Minimum Spanning Trees
+
+### 4.3 Shortest Path Algorithms
+
