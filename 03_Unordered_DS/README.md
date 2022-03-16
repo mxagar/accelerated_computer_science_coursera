@@ -653,7 +653,7 @@ The discovery structure is a **spanning tree**: it spans the entire graph in a s
 That spanning tree is encoded in the node-adjacency list by adding two columns:
 
 - `p, predecessor`: for each vertex, we store its parent vertex in the spanning tree, which forms a *discovery* edge.
-- `d, depth`: number of *discovery* edges since the first node.
+- `d, distance`: number of *discovery* edges since the first node.
 
 Some properties of the spanning tree:
 
@@ -781,13 +781,13 @@ Using the partition property, two components are defined in the graph:
 
 The algorithm has these steps, visualized in the images below:
 
-1. A weight `d = +inf` is assigned to each vertex in the graph.
+1. A distance weight `d = +inf` is assigned to each vertex in the graph.
 2. A priority queue is created with all the vertices and their weights. This priority queue can give us the vertex with the minimum weight `d`.
 3. We choose a starting vertex, e.g., `A`, we set its `d = 0`, and add it to our empty set which should represent the minimum spanning tree. Now we have two components separated by an imaginary boundary: (1) A and (2) the rest of vertices. The set or component with A is the **tree component*, which will grow.
-4. We visit all the edges that cross with the boundary of our tree component, and we update the weight `d` of their vertices to be the weight of their associated edges. Those crossing edges are the ones that connect to the vertices that are note in the *tree component*. Thus, the priority queue with the vertices is re-arranged with the `d` values.
+4. We visit all the edges that cross with the boundary of our tree component, and we update the distance weight `d` of their vertices to be the weight of their associated edges. Those crossing edges are the ones that connect to the vertices that are note in the *tree component*. Thus, the priority queue with the vertices is re-arranged with the `d` values.
 5. We pop the vertex with the minimum `d` from the priority queue, and add it to the *tree component*; that is like selecting the edge that crosses the boundary of the *tree component* which has the minimum weight. We additionally store two values in the selected node:
    - Its predecessor node `p`: that is the other node in the selected edge.
-   - Its updated weight `d`: edge weight (current `d`) + predecessor weight. Although, that's what I would do - the pseudo-code and the videos keep the weight of the edge!
+   - Its updated distance weight `d`: edge weight (current `d`); note that in the Dijkstra's algorithm explained in the next section, we update `d` to be the total distance accumulated to reach that node!
 6. Repeat steps 4 & 5 until the priority queue is empty.
 
 At the end, the final *tree component* contains
@@ -809,6 +809,29 @@ The following figure contains the pseudo-code of the Prim's algorithm for constr
 
 ![Graphs: Prim's Algorithm - Pseudo-Code](./pics/graphs_prim_pseudocode.png)
 
+```
+PrimMST(G, s): // starting vertex s is necessary
+  foreach (Vertex v: G):
+    d[v] = +inf
+    p[v] = NULL
+  d[s] = 0
+
+  PriorityQueue Q // min distance, defined by d[v]
+  Q.buildHeap(G.vertices())
+  Graph T // labelled set or tree component
+
+  repeat n times:
+    Vertex m = Q.removeMin()
+    T.add(m)
+    foreach (Vertex v: neighbors of m not in T):
+      if cost(v,m) < d[v]: // d[v] is +inf by default!
+        d[v] = cost(v,m)
+        p[v] = m
+
+  return T
+```
+
+
 Note that
 
 - a stating node `s` needs to be specified together with the graph `G`;
@@ -824,3 +847,36 @@ The running time of the Prim's algorithm is shown in the figure below. Long stor
 
 ### 4.3 Shortest Path Algorithms
 
+#### 4.3.1 Dijkstra's Single Source Shortest Path Algorithm
+
+Dijkstra's algorithm gives computes the minimum spanning tree that yields the shortest path from a selected node `s` to any other node in the graph. Thus, it is called the *single source shortest path algorithm*.
+
+It is very similar to the Prim's algorithm; the only difference is the updated distance weight `d`: instead of storing the weight/cost/distance `d` of the edge that leads to a node, the total distance or cost from `s` to that node is stored. Thus, we have the total distance from the starting point stored. That is implemented by storing: `d = cost(edge) + cost(predecessor node)`; note that the predecessors will have accumulated the distance to them.
+
+```
+<dijkstraSSSP(G, s): // starting vertex s is necessary
+  foreach (Vertex v: G):
+    d[v] = +inf
+    p[v] = NULL
+  d[s] = 0
+
+  PriorityQueue Q // min distance, defined by d[v]
+  Q.buildHeap(G.vertices())
+  Graph T // labelled set or tree component
+
+  repeat n times:
+    Vertex m = Q.removeMin()
+    T.add(m)
+    foreach (Vertex v: neighbors of m not in T):
+      // Now: the different part wrt. the Prim's algorithm:
+      // cost(v,m) + d[m]: cost of the edge + cost of the predecessor
+      if cost(v,m) + d[m] < d[v]: // d[v] is +inf by default!
+        d[v] = cost(v,m) + d[m]
+        p[v] = m
+
+  return T
+```
+
+The result of the shortest paths is encoded in the `p` values of the returned `T`; `d` stores the distances from the starting node/vertex `s` to each other vertex/node.
+
+![Graphs: Result of the Dijkstra's Algorithm](./pics/graphs_dijkstra_result.png)
