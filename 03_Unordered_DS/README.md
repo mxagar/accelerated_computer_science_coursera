@@ -211,7 +211,7 @@ Disjoint sets are collections of elements with these two properties:
 
 For working with graphs (weeks 3 & 4), we are interested in defining effective algorithm for the following operations:
 
-- `set_id <- find(element_id)`: we want to find the `set_id` in which the element with `element_id` is located. Note that we differentiate between element `id` and set `id`; we want to 
+- `set_id <- find(element_id)`: we want to find the `set_id` in which the element with `element_id` is located. Note that we differentiate between element `id` and set `id`;
 - `set_C <- union(set_A, set_B)`: we want to join to disjoint sets to form a new one.
 
 In fact, disjoint sets are also known as **union-find** data structures, because they are used primarily due to those important operations.
@@ -225,7 +225,7 @@ To simplify:
 
 In the figure example:
 
-`set Oragnde := {2,5,9}; id = 2`
+`set Orange := {2,5,9}; id = 2`
 `set Blue := {7}; id = 2`
 `set Purple := {0, 1, 4, 8}; id = 0`
 `set Yellow := {3, 6}; id = 3`
@@ -385,6 +385,8 @@ Further concepts:
 - Incident edges of a node/vertex `v`: `I(v) = {(x,v) in E}`: all edges that are directly connected to the node/vertex `v`.
 - Degree of a vertex/node: `deg(v) = |I(v)|`: number of incident edges.
 - Adjacent vertices of node/vertex `v`: `A(v) = {x: (x,v) in E}`: vertices connected by an incident edge.
+- Number of vertices/nodes: often denoted as `n`.
+- Number of edges: often denoted as `m`.
 - `Path(G1)`: sequence of vertices/nodes connected by edges.
 - `Cycle(G1)`: path with common begin and end vertex (a loop).
 - Simple graph: a graph with
@@ -392,6 +394,10 @@ Further concepts:
   - No multi-edges: between two nodes/vertices there is only one edge.
 - Connected graph: all vertices/nodes have a path connecting them.
 - Connected component: a subgraph which is a connected graph.
+- Dense and sparse graphs
+  - Dense graphs have many connections and tend to have `m -> n^2` edges
+  - Sparse graphs have less connections and tend to have `m -> n` edges
+  - Thus, no matter how the graph is, usually `m > n`
 
 Concepts that are introduced later:
 - Complete subgraph
@@ -652,15 +658,116 @@ That spanning tree is encoded in the node-adjacency list by adding two columns:
 Some properties of the spanning tree:
 
 - We can compute the shortest path from the root or starting node to any of the other nodes.
-- However, we cannot compute the shortest path from any node to another any node (bacause the shortest path might contain *cross* edges, which are not in the spanning tree).
+- However, we cannot compute the shortest path from any node to another any node (because the shortest path might contain *cross* edges, which are not in the spanning tree).
 - If we follow a *cross* edge, we won't get more than one further from our start or root.
 
 ![Graphs: Spanning Tree obtained from BFS](./pics/graphs_bfs_spanning_tree.png)
 
 #### 4.1.2 Depth-First Search Traversal (DFS)
 
+With a breadth-first traversal we discover all nearby nodes first and then visit their children.
 
-### 4.2 Minimum Spanning Trees
+In contrast, in a **depth-first search** traversal, we want to go deep very quick; thus, the main difference is that we visit the children first, not the nearby nodes. In practice, that is like using a stack as a support structure for the traversal instead of a queue.
+
+![Graphs: Depth-First Traversal Example](./pics/graphs_dfs_traversal_example.png)
+
+Differences wrt. the BFS:
+
+- The implementation is very simple: instead of using a queue, it works as if we were using a stack; however, that is equivalent to perform recursive calls for each node in the `DFS` algorithm, so we really don't need any stack in the implementation.
+- Instead of *cross* edges, the edges which lead to already visited nodes are called *back* edges.
+
+![Graphs: Depth-First Traversal - Pseudocode](./pics/graphs_dfs_traversal_pseudocode.png)
+
+The DFS traversal has the same running time as the BFS: `O(n+m)`. Additionally, we also generate a spanning tree with it; however, the priority is reserved to the deepest nodes first.
+
+### 4.2 Minimum Spanning Trees (MST)
+
+A **Minimum Spanning Tree (MST)** is a spanning tree that contains all the nodes of a graph but the minimum possible of edges or weights associated to them. Thanks to the MST, we can travel in the graph with the smallest effort possible (less edges or less weight).
+
+Note that
+
+- the weight is introduced here for the first time: it is simply the cost contained in an edge, the effort we need to do to traverse it;
+- weights need to be able to be added;
+- we assume we have an undirected graph.
+
+![Graphs: Minimum Spanning Tree Definition](./pics/graphs_mst_definition.png)
+
+We are going to learn two algorithms that are able to build a MST:
+
+- Kruskal's Algorithm
+- Prim's Algorithm
+
+#### 4.2.1 Kruskal's Algorithm for Building a MST
+
+With the Kruskal's algorithm we can compute the minimum spanning tree of a graph, which can help us find the shortest path between nodes. Recall that edges have weights, i.e., the cost we need to pay to go through them. In a network of cities and roads, the weight could be the length of a road connecting two cities.
+
+Given a connected graph with weights on its edges, we need two data structures:
+
+- A Min-Heap of the edges: recall that a min-heap is a binary tree stored in an array so that the deeper elements have always a larger value, i.e., the minimum element es in the root.
+- An Up-Tree of the nodes: recall that an up-tree is a tree stored in an array so that we can easily work with disjoint sets; in particular, we want be able to quickly union them and find the set an element belongs to.
+
+First, we create the min-heap of the edges, which is ordered according to the weight of each edge: the ones with a larger cost are down below, the root node is the edge with the smallest weight. The key idea is that we maintain the min-heap of the edges so that we can always get the edge with the minimum weight. An alternative to building a min-heap is to have a sorted array; even though, that is more expensive to build, the final algorithm has the same complexity, as shown below.
+
+Then, we create an up-tree of all the nodes/vertices: at the beginning all are disjoint and have a value of -1; we start unioning the nodes simply by going top-down in the min-heap array, step by step:
+
+- We union the nodes of the first edge, which is the one with the minimum weight; we mark the edge as *added*.
+- We continue unioning the nodes of the next edge items in the array; if the nodes of an edge belong to the same set, they are not unioned, thus the edge is marked as *not added*. These are the cycles, which are not necessary, since we are building a tree!
+- Note that even though in the slide/video we keep traversing the edge array, we in practice would get the minimum every time, except the array of the edges is a sorted array, not a min-heap (in which case, we traverse the array).
+- When all nodes belong to a set, we have the minimum spanning tree: the edges which were mark as *added* form the minimum spanning tree!
+
+We cannot create a spanning tree which has a smaller value than this one. Additionally, since it's a spanning tree, we connect all nodes in the graph.
+
+![Graphs: Kruskal's Algorithm for Computing the Minimum Spanning Tree](./pics/graphs_mst_kruskal.png)
+
+##### Running Time
+
+The pseudo-code using a min-heap is divided in 3 steps: (1) the creation of the disjoint set with the vertices, (2) the creation with the priority queue with the vertices, and (3) the finding of the edges that conform the minimum spanning tree with the aforementioned structures:
+
+```
+KruskalMST(G):
+
+  // n: vertices
+  n = |G.vertices()|
+  // m: edges
+  m = |G.edges()|
+  // usually, n < m, since we have a connected graph
+
+  // 1. Create UpTree of vertices/nodes: O(n)
+  DisjointSets forest
+  foreach (Vertex v: G): // complete loop is O(n)
+    forest.makeSet(v)
+
+  // 2. Create a Min-Heap of the edges
+  PriorityQueue Q
+  foreach(Edge e: G): // complete loop is O(m)
+    Q.insert(e)
+  
+  Graph T = (G.vertices(), {})
+
+  // 3. Create Minimum Spanning Tree (Kruskal)
+  while |T.edges()| < m-1: // complete loop is O(mlog(m))
+    Edge e = (u,v) = Q.removeMin() // each remove O(log(m))
+    if forest.find(u) != forest.find(v):
+      T.addEdge(u,v)
+      forest.union(forest.find(u),forest.find(v))
+  
+  return T
+  
+```
+
+Note that if we use a sorted array instead of a min-hep for the priority queue,
+- the creation of the priority queue takes `O(mlog(m))` instead of `O(m)`, while
+- each `removeMin()` is `O(1)`, instead of `O(log(m))`.
+
+Thus, either min-heaps or sorted arrays, in sum both lead to the same effort: `O(m) + O(mlog(m)) = O(mlog(m))`!
+
+Since `n < m`, we can neglect the time necessary for creating the disjoint set of vertices, `O(n)`.
+
+Therefore, the total time for computing the minium spanning tree with the Kruskal's algorithm is `O(mlog(m))`.
+
+#### 4.2.2 Prim's Algorithm for Building a MST
+
+Prim's algorithm is another way of constructing a minimum spanning tree.
 
 ### 4.3 Shortest Path Algorithms
 
