@@ -1105,7 +1105,7 @@ The motivation behind heaps are **priority queues**: we collect numbers or simil
 The heap is a binary tree with these defining properties (min-heap): `T` is a heap if
 
 - `T = {}` (it is empty), or
-- `T = {r, T_L, T_R}`, where `r` is less than the roots of `{T_L, T_R}`, and `{T_L, T_R}` are  min heaps.
+- `T = {r, T_L, T_R}`, where `r` is less than the roots of `{T_L, T_R}`; and `{T_L, T_R}` are  min heaps.
 
 So, all about we care is: the parent node needs to be smaller than its descendants; we don't care about the left subtree when we observe the right one, or vice versa.
 
@@ -1131,12 +1131,12 @@ Note that we start counting the node indices at `i = 1`, not `0`; that is equiva
 
 Insertion of a new node into the heap happens with these easy steps:
 
-1. We insert the node at the end of array: that is equivalent to inserting a node at the last level, hanging from the leftmost node with at least a free slot
+1. We insert the node at the end of an array: that is equivalent to inserting a node at the last level, hanging from the leftmost node with at least a free slot
 2. We check that the inserted node with index `i` is smaller (if min-heap) than its parent in position `floor(i/2)`. If so, we are done.
 3. If the parent is larger, then we swap child and parent. That swapping upwards is sometimes called `heapifyUp()`.
 4. Now, we repeat steps 2 & 3 to swap the node upwards if necessary (i.e., if it is smaller than its parents).
 
-Example pic: we do first `insert(8)` (no swapping necessary), the `insert(3)` (node is swapped upwards).
+Example pic: we do first `insert(8)` (no swapping necessary), then `insert(3)` (node is swapped upwards).
 
 ![Heap: insert a node](./pics/heap_insert.png)
 
@@ -1183,7 +1183,7 @@ Here is the list of steps to follow:
 ![Heap: ](./pics/heap_remove_example.jpeg)
 
 In the following, example code from `./heap/Heap.hpp`.
-**Very important note**: `heapifyDown()` does not change anything if the node is leaf! This property is used later to build a hea given an unsorted array.
+**Very important note**: `heapifyDown()` does not change anything if the node is leaf! This property is used later to build a heap given an unsorted array.
 
 ```c++
 template <class T>
@@ -1216,10 +1216,10 @@ void Heap<T>::_heapifyDown( unsigned index ) {
 
 ### 4.4 Heaps: `buildHeap()`
 
-The goal we have it build a heap given a string or a chain of characters/elements.
+The goal we have is to build a heap given a string or a chain of characters/elements.
 Two naive approaches would be:
 
-1. Sort the array and we have the heap; but that takes are least `O(nlog(n))`.
+1. Sort the array and we have the heap; but that takes at least `O(nlog(n))`.
 2. Given the array, start building a heap with `insert()`; that performs `heapifyUp()` several times. In other words, we execute `heapifyUp()` to each of the `n` nodes in the array, which costs `O(log(n))` for each, so altogether we need `O(nlog(n))`.
 
 A **third** more clever and faster approach is to **`heapifyDown()` starting from the very last node backwards**.
@@ -1231,7 +1231,7 @@ However, note that:
 In summary, calling `heapifyDown()` non-recursively to `n/2` nodes (constant time for each) yields a complexity of `O(n)`! Note that **it is essential for us not to call `heapifyDown()` recursively here**:
 
 - That is due to the fact we apply `heapifyDown()` upwards, thus, the subtrees below the node we're in have already been corrected, i.e., they a heaps!
-- The lack of recursive call makes this approach of constant time for each call! Thus, in total `O(n)`
+- The lack of the recursive call makes this approach of constant time for each call! Thus, in total `O(n)`
 
 The corollary here is that given any array, **we can build a heap representation of it in `O(n)`**: that is very powerful.
 
