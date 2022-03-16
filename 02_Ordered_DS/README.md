@@ -1099,8 +1099,8 @@ The motivation behind heaps are **priority queues**: we collect numbers or simil
 
 - We might remove several objects in a row, so keeping the `min` or `max` as a variable doesn't work.
 - Unsorted lists and arrays have `O(1)` insertion, but `O(n)` `removeMin()`.
-- Sorted lists and arrays have `O(n)` insertion, and `O(1)` `removeMin()`.
-- Thus, although an ordered list allows for fast `removeMin()`, inserting elements / maintaining it ordered is very costly, we need something more effective: a heap.
+- Sorted lists and arrays have `O(n)` insertion, and `O(1)` `removeMin()`; additionally, we need `O(nlog(n))` to sort a list.
+- Thus, **although an ordered list is the basic priority queue which allows for fast `removeMin()`, inserting elements / maintaining it ordered is very costly, we need something more effective: a heap.**
 
 The heap is a binary tree with these defining properties (min-heap): `T` is a heap if
 
