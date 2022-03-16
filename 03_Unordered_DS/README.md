@@ -849,7 +849,9 @@ The running time of the Prim's algorithm is shown in the figure below. Long stor
 
 #### 4.3.1 Dijkstra's Single Source Shortest Path Algorithm
 
-Dijkstra's algorithm gives computes the minimum spanning tree that yields the shortest path from a selected node `s` to any other node in the graph. Thus, it is called the *single source shortest path algorithm*.
+Dijkstra's algorithm gives computes the minimum spanning tree that yields the shortest path from a selected node `s` to any other node in the graph. Thus, it is called the *single source shortest path algorithm*. Assumption or condition: We have positive weights.
+
+Note that the example in the included figure is done with a directed graph; however, Dijkstra's algorithm works both with directed and undirected graphs. Recall that in a directed graph, in each edge one node is the start (from) node and the other one the end (to) node.
 
 It is very similar to the Prim's algorithm; the only difference is the updated distance weight `d`: instead of storing the weight/cost/distance `d` of the edge that leads to a node, the total distance or cost from `s` to that node is stored. Thus, we have the total distance from the starting point stored. That is implemented by storing: `d = cost(edge) + cost(predecessor node)`; note that the predecessors will have accumulated the distance to them.
 
@@ -880,3 +882,61 @@ It is very similar to the Prim's algorithm; the only difference is the updated d
 The result of the shortest paths is encoded in the `p` values of the returned `T`; `d` stores the distances from the starting node/vertex `s` to each other vertex/node.
 
 ![Graphs: Result of the Dijkstra's Algorithm](./pics/graphs_dijkstra_result.png)
+
+##### Dijkstra's Algorithm: Edge Cases: Edges with Negative Weights / Distances
+
+Dijktra's algorithm fails to find the shortest path when edges have negative weights. In fact, in a graph with negative weights, no shortest path exists, because we end up in loops that indefinitely decrease the distance traversed. Thus, actually all shortest path algorithms fail to find the path. However, there are algorithms to deal with those situations.
+
+To sum up, Dijkstra's algorithm works only with positive weights/distances/costs, because it assumes that the accumulated distance to the source or starting node/vertex increases monotonically.
+
+##### Dijkstra's Algorithm: Running Time
+
+Since the algorithm is very similar to the Prim's algorithm, the same running time could be expected: `O(mlog(m))`. However, by using a special type of priority queue called the **Fibonacci heap**, Dijkstra's algorithm runs at `O(m + nlog(n))`: this running time is the best you can get in any shortest path algorithm.
+
+#### 4.3.2 The Landmark Path Problem
+
+We have seen the following algorithms on graphs:
+
+- Traversal algorithms that create minimum spanning trees of undirected **graphs without weights** in their edges, which run at `O(n + m)`:
+  - Breadth-First Traversal
+  - Depth-First Traversal
+- Algorithms for the computation of minimum spanning trees of undirected **graphs with weights** in their edges, which run at `O(mlog(m))`
+  - Kruskal's Algorithm
+  - Prim's Algorithm
+- Algorithm for the computation of the shortest path of directed/undirected **graphs with weights** in their edges, which runs at `O(m + nlog(n))` after the optimization with the Fibonacci heap.
+
+All of them compute:
+
+- a minimum spanning tree
+- and the shortest path to all nodes from a starting node.
+
+The main difference is some use
+
+- weighted edges, 
+- others un-weighted edges.
+
+Therefore, we need to choose the best algorithm (i.e., the one with the smallest running time) for each problem /situation.
+
+##### Landmark Problem
+
+We have a directed graph with nodes `A, B, ..., L, M` connected with directed edges, each with the same weight `d = 3`.
+
+We want to go from `A` to `G`, but going through the landmark `L`. Which algorithm would we use?
+
+A **naive approach** would be to use the Dijkstra's algorithm as follows:
+- We find the shortest path from `A` to `L`.
+- Then, the shortest path from `L` to `G`.
+- We have computed `2x O(m + nlog(n))`.
+
+However, note these observations:
+- Having the same weight is like no having a weight, or equivalently each step costs the same, as in the algorithms for the unweighted edges.
+- The shortest path from `A` to `L` is the same as from `L` to `A`
+
+Therefore, the **smart approach** would be the following:
+- We compute a BFS/DFS from `L` once.
+- Thus, we find these paths: `L -> A`, `A -> L`, `L -> G`.
+- Now, we have the path `A -> L -> G` running only `1x O(m + n)`.
+
+We need to apply this way of thinking to any problem: we have an algorithm toolset which we need to know very well to hack problems!
+
+![Graphs: The Landmark Problem](./pics/graphs_landmark_problem.png)
