@@ -1,3 +1,4 @@
 add_subdirectory(week_1_challenge)
 add_subdirectory(week_2_challenge)
 add_subdirectory(week_3_challenge)
+add_subdirectory(week_4_challenge)
