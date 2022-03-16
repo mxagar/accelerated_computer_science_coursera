@@ -38,7 +38,11 @@ Overview of contents:
    - 3.3 Week 3 Challenge
    - 3.4 Week 3 Assignment
 4. Week 4: Heaps
-
+   - 4.1 Motivation: Priority Queues & Heap Definition
+   - 4.2 Heap Insert
+   - 4.3 Heap Remove (Min)
+   - 4.4 Heaps: `buildHeap()`
+   - 4.5 Heaps: Runtime Analysis, Heap Sort
 
 ## Week 1: Linear Structures
 
