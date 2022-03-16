@@ -621,17 +621,17 @@ Notes:
 
 - It is called Breadth-First because we discover all adjacent nodes progressively.
 - No matter the order in which we push the adjacent nodes, we always visit all the nodes.
-- **However, the order in which we push the nodes discovers a different substructure** related to the discovery of the nodes. That substructure is created by labelling the edges as *discovery* (often marked with thick lines) is they lead to a new node, *cross edge* otherwise (often marked with light lines). We are going to use that structure that tells how the nodes were discovered.
+- **However, the order in which we push the nodes discovers a different substructure** related to the discovery of the nodes. That substructure is created by labelling the edges that lead to a new node as *discovery* (often marked with thick lines), *cross edge* otherwise (often marked with light lines). We are going to use that structure that tells how the nodes were discovered.
 - Note that a *cross* edge is actually a cycle!
 
-Pseudocode of the BFS traversal algorithm that visits all nodes and returns the discovery structure:
+Pseudo-code of the BFS traversal algorithm that visits all nodes and returns the discovery structure:
 
 ![Graphs: Breadth-First Search Traversal Pseudocode](./pics/graphs_bfs_traversal_pseudocode.png)
 
 Note that the pseudo code has two parts:
 
-- `BFS(G)`: main algorithm; after resetting all vertices/edges to be *UNEXPLORED*, all *UNEXPORED* vertices are processed by the second part: `BFS(G, v)`. Since that second part performs the breadth-first seach on the connected component, we can count components (disjoint subgraphs) in `BFS(G)` whenever we jump to the next *UNEXPLORED* vertex!
-- `BFS(G, v)`: the breadth-first search is performed as described above: we pupulate a queue with *UNEXPLORED* nodes and mark them and edges accordingly.
+- `BFS(G)`: main algorithm; after resetting all vertices/edges to be *UNEXPLORED*, all *UNEXPORED* vertices are processed by the second part: `BFS(G, v)`. Since that second part performs the breadth-first search on the connected component, we can count components (disjoint subgraphs) in `BFS(G)` whenever we jump to the next *UNEXPLORED* vertex!
+- `BFS(G, v)`: the breadth-first search is performed as described above: we populate a queue with *UNEXPLORED* nodes and mark them and the edges accordingly.
 - We can compute also the number of cycles simply by counting them whenever a *cross edge* is discovered.
 
 ##### Running time
@@ -643,8 +643,8 @@ We can conclude it from the pseudocode:
 
 Thus, the running time is `O(n + m)`. Note that
 
-- `m` is going to be often similar to `n`, so the algorithm will run in linear time
-- **BUT**: it might happen that `m = n^2` in case we have a fully connected graph! (I.e., each node is connected to all the other nodes)
+- `m` is going to be often similar to `n` (sparse graph), so the algorithm will run in linear time.
+- **BUT**: it might happen that `m = n^2` in case we have a fully connected or dense graph! (I.e., each node is connected to all the other nodes).
 
 ##### Properties of the Discovery Structure = Spanning Tree
 
@@ -657,7 +657,7 @@ That spanning tree is encoded in the node-adjacency list by adding two columns:
 
 Some properties of the spanning tree:
 
-- We can compute the shortest path from the root or starting node to any of the other nodes.
+- We can compute the **shortest path from the root or starting node to any of the other nodes**.
 - However, we cannot compute the shortest path from any node to another any node (because the shortest path might contain *cross* edges, which are not in the spanning tree).
 - If we follow a *cross* edge, we won't get more than one further from our start or root.
 
@@ -667,13 +667,13 @@ Some properties of the spanning tree:
 
 With a breadth-first traversal we discover all nearby nodes first and then visit their children.
 
-In contrast, in a **depth-first search** traversal, we want to go deep very quick; thus, the main difference is that we visit the children first, not the nearby nodes. In practice, that is like using a stack as a support structure for the traversal instead of a queue.
+In contrast, in a **depth-first search** traversal, we want to go deep very quick; thus, the main difference is that we visit the children first, not the nearby nodes. That is like using a stack as a support structure for the traversal instead of a queue.
 
 ![Graphs: Depth-First Traversal Example](./pics/graphs_dfs_traversal_example.png)
 
 Differences wrt. the BFS:
 
-- The implementation is very simple: instead of using a queue, it works as if we were using a stack; however, that is equivalent to perform recursive calls for each node in the `DFS` algorithm, so we really don't need any stack in the implementation.
+- The implementation is very simple: instead of using a queue, it works as if we were using a stack; however, in practice, that is equivalent to perform recursive calls for each node in the `DFS` algorithm, so we really don't need any stack in the implementation.
 - Instead of *cross* edges, the edges which lead to already visited nodes are called *back* edges.
 
 ![Graphs: Depth-First Traversal - Pseudocode](./pics/graphs_dfs_traversal_pseudocode.png)
@@ -682,7 +682,7 @@ The DFS traversal has the same running time as the BFS: `O(n+m)`. Additionally, 
 
 ### 4.2 Minimum Spanning Trees (MST)
 
-A **Minimum Spanning Tree (MST)** is a spanning tree that contains all the nodes of a graph but the minimum possible of edges or weights associated to them. Thanks to the MST, we can travel in the graph with the smallest effort possible (less edges or less weight).
+A **Minimum Spanning Tree (MST)** is a spanning tree that contains all the nodes of a graph but the minimum possible of edges or weights associated to them. Thanks to the MST, we can travel in the graph with the smallest effort possible (less weight/distance/cost).
 
 Note that
 
@@ -703,10 +703,10 @@ With the Kruskal's algorithm we can compute the minimum spanning tree of a graph
 
 Given a connected graph with weights on its edges, we need two data structures:
 
-- A Min-Heap of the edges: recall that a min-heap is a binary tree stored in an array so that the deeper elements have always a larger value, i.e., the minimum element es in the root.
+- A Min-Heap of the edges: recall that a min-heap is a binary tree stored in an array so that the deeper elements have always a larger value, i.e., the minimum element is in the root, always available to us.
 - An Up-Tree of the nodes: recall that an up-tree is a tree stored in an array so that we can easily work with disjoint sets; in particular, we want be able to quickly union them and find the set an element belongs to.
 
-First, we create the min-heap of the edges, which is ordered according to the weight of each edge: the ones with a larger cost are down below, the root node is the edge with the smallest weight. The key idea is that we maintain the min-heap of the edges so that we can always get the edge with the minimum weight. An alternative to building a min-heap is to have a sorted array; even though, that is more expensive to build, the final algorithm has the same complexity, as shown below.
+First, we create the min-heap of the edges, which is ordered according to the weight of each edge: the ones with a larger cost are down below, the root node is the edge with the smallest weight. The key idea is that we maintain the min-heap of the edges so that we can always pop the next edge with the minimum weight. An alternative to building a min-heap is to have a sorted array; even though that is more expensive to build, the final algorithm has the same complexity, as shown below.
 
 Then, we create an up-tree of all the nodes/vertices: at the beginning all are disjoint and have a value of -1; we start unioning the nodes simply by going top-down in the min-heap array, step by step:
 
@@ -784,7 +784,7 @@ The algorithm has these steps, visualized in the images below:
 1. A distance weight `d = +inf` is assigned to each vertex in the graph.
 2. A priority queue is created with all the vertices and their weights. This priority queue can give us the vertex with the minimum weight `d`.
 3. We choose a starting vertex, e.g., `A`, we set its `d = 0`, and add it to our empty set which should represent the minimum spanning tree. Now we have two components separated by an imaginary boundary: (1) A and (2) the rest of vertices. The set or component with A is the **tree component*, which will grow.
-4. We visit all the edges that cross with the boundary of our tree component, and we update the distance weight `d` of their vertices to be the weight of their associated edges. Those crossing edges are the ones that connect to the vertices that are note in the *tree component*. Thus, the priority queue with the vertices is re-arranged with the `d` values.
+4. We visit all the edges that cross with the boundary of our tree component, and we update the distance weight `d` of their vertices to be the weight of their associated edges. Those crossing edges are the ones that connect to the vertices that are not in the *tree component*. Thus, the priority queue with the vertices is re-arranged with the `d` values.
 5. We pop the vertex with the minimum `d` from the priority queue, and add it to the *tree component*; that is like selecting the edge that crosses the boundary of the *tree component* which has the minimum weight. We additionally store two values in the selected node:
    - Its predecessor node `p`: that is the other node in the selected edge.
    - Its updated distance weight `d`: edge weight (current `d`); note that in the Dijkstra's algorithm explained in the next section, we update `d` to be the total distance accumulated to reach that node!
@@ -793,6 +793,7 @@ The algorithm has these steps, visualized in the images below:
 At the end, the final *tree component* contains
 
 - all the nodes
+- with the node weights `d`
 - and the tree encoded as the predecessors `p`.
 
 ![Graphs: Prim's Algorithm Example, 1](./pics/graphs_prim_example_1.png)
@@ -849,11 +850,11 @@ The running time of the Prim's algorithm is shown in the figure below. Long stor
 
 #### 4.3.1 Dijkstra's Single Source Shortest Path Algorithm
 
-Dijkstra's algorithm gives computes the minimum spanning tree that yields the shortest path from a selected node `s` to any other node in the graph. Thus, it is called the *single source shortest path algorithm*. Assumption or condition: We have positive weights.
+Dijkstra's algorithm computes the minimum spanning tree that yields the shortest path from a selected node `s` to any other node in the graph. Thus, it is called the *single source shortest path algorithm*. Assumption or condition: We have positive weights.
 
-Note that the example in the included figure is done with a directed graph; however, Dijkstra's algorithm works both with directed and undirected graphs. Recall that in a directed graph, in each edge one node is the start (from) node and the other one the end (to) node.
+Note that the example in the included figure is done with a directed graph; however, Dijkstra's algorithm works with both directed and undirected graphs. Recall that in a directed graph, in each edge one node is the start (from) node and the other one the end (to) node.
 
-It is very similar to the Prim's algorithm; the only difference is the updated distance weight `d`: instead of storing the weight/cost/distance `d` of the edge that leads to a node, the total distance or cost from `s` to that node is stored. Thus, we have the total distance from the starting point stored. That is implemented by storing: `d = cost(edge) + cost(predecessor node)`; note that the predecessors will have accumulated the distance to them.
+It is very similar to the Prim's algorithm; the only difference is the updated distance weight `d`: instead of storing the weight/cost/distance `d` of the edge that leads to the node, the total distance or cost from `s` to that node is stored. Thus, we have the total distance from the starting point stored. That is implemented by storing: `d = cost(edge) + cost(predecessor node)`; note that the predecessors will have accumulated the distance to them.
 
 ```
 <dijkstraSSSP(G, s): // starting vertex s is necessary
@@ -940,3 +941,4 @@ Therefore, the **smart approach** would be the following:
 We need to apply this way of thinking to any problem: we have an algorithm toolset which we need to know very well to hack problems!
 
 ![Graphs: The Landmark Problem](./pics/graphs_landmark_problem.png)
+
