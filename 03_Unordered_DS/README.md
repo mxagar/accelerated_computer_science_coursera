@@ -719,7 +719,7 @@ We cannot create a spanning tree which has a smaller value than this one. Additi
 
 ![Graphs: Kruskal's Algorithm for Computing the Minimum Spanning Tree](./pics/graphs_mst_kruskal.png)
 
-##### Running Time
+##### Pseudo-Code & Running Time
 
 The pseudo-code using a min-heap is divided in 3 steps: (1) the creation of the disjoint set with the vertices, (2) the creation with the priority queue with the vertices, and (3) the finding of the edges that conform the minimum spanning tree with the aforementioned structures:
 
@@ -755,7 +755,7 @@ KruskalMST(G):
   
 ```
 
-Note that if we use a sorted array instead of a min-hep for the priority queue,
+Note that if we use a sorted array instead of a min-heap for the priority queue,
 - the creation of the priority queue takes `O(mlog(m))` instead of `O(m)`, while
 - each `removeMin()` is `O(1)`, instead of `O(log(m))`.
 
@@ -768,6 +768,59 @@ Therefore, the total time for computing the minium spanning tree with the Kruska
 #### 4.2.2 Prim's Algorithm for Building a MST
 
 Prim's algorithm is another way of constructing a minimum spanning tree.
+Instead of using a priority queue of the edges based on their weights (i.e., sorted array or min-heap), **we build a priority queue of the vertices in the graph, assigning to each a weight which is updated as we span the minimum tree**.
+
+Everything works thanks to the **partition property**, which states that **the edge with the minimum weight that connects two separate/disconnected components must be part of a minimum spanning tree.**
+
+![Graphs: Partition Property](./pics/graphs_prim_partition_property.png)
+
+Using the partition property, two components are defined in the graph:
+
+- A growing component, which starts with one vertex.
+- The component composed of the set of complementary vertices, which is decreased as we transfer vertices to the other previous component.
+
+The algorithm has these steps, visualized in the images below:
+
+1. A weight `d = +inf` is assigned to each vertex in the graph.
+2. A priority queue is created with all the vertices and their weights. This priority queue can give us the vertex with the minimum weight `d`.
+3. We choose a starting vertex, e.g., `A`, we set its `d = 0`, and add it to our empty set which should represent the minimum spanning tree. Now we have two components separated by an imaginary boundary: (1) A and (2) the rest of vertices. The set or component with A is the **tree component*, which will grow.
+4. We visit all the edges that cross with the boundary of our tree component, and we update the weight `d` of their vertices to be the weight of their associated edges. Those crossing edges are the ones that connect to the vertices that are note in the *tree component*. Thus, the priority queue with the vertices is re-arranged with the `d` values.
+5. We pop the vertex with the minimum `d` from the priority queue, and add it to the *tree component*; that is like selecting the edge that crosses the boundary of the *tree component* which has the minimum weight. We additionally store two values in the selected node:
+   - Its predecessor node `p`: that is the other node in the selected edge.
+   - Its updated weight `d`: edge weight (current `d`) + predecessor weight. Although, that's what I would do - the pseudo-code and the videos keep the weight of the edge!
+6. Repeat steps 4 & 5 until the priority queue is empty.
+
+At the end, the final *tree component* contains
+
+- all the nodes
+- and the tree encoded as the predecessors `p`.
+
+![Graphs: Prim's Algorithm Example, 1](./pics/graphs_prim_example_1.png)
+
+![Graphs: Prim's Algorithm Example, 2](./pics/graphs_prim_example_2.png)
+
+![Graphs: Prim's Algorithm Example, 3](./pics/graphs_prim_example_3.png)
+
+![Graphs: Prim's Algorithm Example, 4](./pics/graphs_prim_example_4.png)
+
+##### Pseudo-Code & Running Time
+
+The following figure contains the pseudo-code of the Prim's algorithm for constructing a minimum spanning tree:
+
+![Graphs: Prim's Algorithm - Pseudo-Code](./pics/graphs_prim_pseudocode.png)
+
+Note that
+
+- a stating node `s` needs to be specified together with the graph `G`;
+- we return the tree `T`;
+- updating the weights of the vertices that belong to the crossing edges is done every time we add a new vertex `m` to the *tree component* `T`, by simply visiting the adjacent vertices of `m` that are not in `T`!
+
+The running time of the Prim's algorithm is shown in the figure below. Long story short: the running times are as with Kruskal's algorithm:
+
+- For sparse graphs (`m ~ n`): `O(mlog(m))`
+- For dense graphs (`m ~ n^2`): `O(n^2log(n))`
+
+![Graphs: Prim's Algorithm - Running Time](./pics/graphs_prim_running_time.png)
 
 ### 4.3 Shortest Path Algorithms
 
