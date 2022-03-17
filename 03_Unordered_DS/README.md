@@ -682,7 +682,7 @@ The DFS traversal has the same running time as the BFS: `O(n+m)`. Additionally, 
 
 ### 4.2 Minimum Spanning Trees (MST)
 
-A **Minimum Spanning Tree (MST)** is a spanning tree that contains all the nodes of a graph but the minimum possible of edges or weights associated to them. Thanks to the MST, we can travel in the graph with the smallest effort possible (less weight/distance/cost).
+A **Minimum Spanning Tree (MST)** is a spanning tree that contains all the nodes of a graph but the minimum possible of edges or weights associated to them. Thanks to the MST, we can travel in the graph with the smallest effort possible (less weight/distance/cost). I understand that the main difference between the *spanning tree* obtained with BFS & DFS and the *minimum spanning tree* is the fact that the edges have weights!
 
 Note that
 
