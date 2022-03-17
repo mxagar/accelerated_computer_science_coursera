@@ -41,6 +41,16 @@ Overview of contents:
    - 3.7 Week 3 Challenge: Union of Graphs Represented as Disjoint Sets
    - 3.8 Week 3 Assignment: Breadth-First-Search in a Graph
 4. Week 4: Graph Algorithms
+   - 4.1 Graph Traversal
+     - 4.1.1 Breadth-First Search Traversal (BFS)
+     - 4.1.2 Depth-First Search Traversal (DFS)
+   - 4.2 Minimum Spanning Trees (MST)
+     - 4.2.1 Kruskal's Algorithm for Building a MST
+     - 4.2.2 Prim's Algorithm for Building a MST
+   - 4.3 Shortest Path Algorithms
+     - 4.3.1 Dijkstra's Single Source Shortest Path Algorithm
+     - 4.3.2 The Landmark Path Problem
+   - 4.4 Week 4 Challenge: Breadth-First Search in a Graph with Distance Computation Using Disjoint Sets
 
 ## Week 1: Hashing
 
@@ -516,7 +526,7 @@ There is not a best implementation, but we need to consider all of them dependin
 
 See `./week_3_challenge/README.md`.
 
-I had to re-read several sections and teh instructions to complete the challenge, because I thought it was more complicated -- it was at the end quite easy.
+I had to re-read several sections and the instructions to complete the challenge, because I thought it was more complicated -- it was at the end quite easy.
 
 Original, to be modified:
 
@@ -942,3 +952,151 @@ We need to apply this way of thinking to any problem: we have an algorithm tools
 
 ![Graphs: The Landmark Problem](./pics/graphs_landmark_problem.png)
 
+### 4.4 Week 4 Challenge: Breadth-First Search in a Graph with Distance Computation Using Disjoint Sets
+
+See `./week_4_challenge/README.md`.
+
+Rather easy challenge.; only to lines with `if` conditions needed to be changed following the explanation.
+
+```c++
+#include <iostream>
+#include <string>
+
+// Note: You must not change the definition of DisjointSets here.
+class DisjointSets {
+public:
+  int s[256];
+  int distance[256];
+
+  DisjointSets() {
+    for (int i = 0; i < 256; i++) s[i] = distance[i] = -1;
+  }
+
+  int find(int i) { return s[i] < 0 ? i : find(s[i]); }
+  
+  void dsunion(int i, int j) {
+    int root_i = find(i);
+    int root_j = find(j);
+    if (root_i != root_j) {
+      s[root_i] = root_j;
+    }
+  }
+  
+  void bfs(int i, int n, int m, int edges[][2]);
+};
+
+
+/* Below are two conditions that need to be programmed
+ * to allow this procedure to perform a breadth first
+ * traversal and mark the edge distance of the graph's
+ * vertices from vertex i.
+ */
+
+void DisjointSets::bfs(int i, int n, int m, int edges[][2]) {
+  
+  distance[i] = 0;
+
+  // no need to iterate more than m times
+  // but loop terminates when no new
+  // vertices added to the frontier.
+  
+  for (int d = 1; d < m; d++) {
+    
+    // f is the index of the first
+    // vertex added to the frontier
+    int f = -1;
+
+    // rooti is the name of the set
+    // holding all of the vertices
+    // that have already been assigned
+    // distances
+    
+    int rooti = find(i);
+
+    // loop through all of the edges
+    // (this could be much more efficient
+    // if an adjacency list was used
+    // instead of a simple edge list)
+    
+    for (int j = 0; j < m; j++) {
+
+      // root0 and root1 are the names of
+      // the sets that the edge's two
+      // vertices belong to
+
+      int root0 = find(edges[j][0]);
+      int root1 = find(edges[j][1]);
+
+      //if ( ***INSERT CONDITION HERE*** ) {
+      if ( root0 == rooti  && root1 != rooti ) {
+
+        // add the [1] vertex of the edge
+        // to the frontier, either by
+        // setting f to that vertex if it
+        // is the first frontier vertex
+        // found so far, or by unioning
+        // it with the f vertex that was
+        // already found.
+        
+        if (f == -1)
+          f = edges[j][1];
+        else
+          dsunion(f,edges[j][1]);
+          //dsunion(edges[j][1],f);
+
+        // set the distance of this frontier
+        // vertex to d
+
+        distance[edges[j][1]] = d;
+        
+      //} else if ( ***INSERT CONDITION HERE*** ) {
+      } else if ( root1 == rooti && root0 != rooti ) {
+        if (f == -1)
+          f = edges[j][0];
+        else
+          dsunion(f,edges[j][0]);
+          //dsunion(edges[j][0],f);
+        distance[edges[j][0]] = d;
+      }
+    }
+    
+    // if no vertices added to the frontier
+    // then we have run out of vertices and
+    // are done, otherwise union the frontier
+    // set with the set of vertices that have
+    // already been processed.
+    
+    if (f == -1)
+      break;
+    else
+      dsunion(f,i);
+  }
+}
+
+int main() {
+
+  int edges[8][2] = {{0,1},{1,2},{2,3},{3,4},{4,5},{5,6},{6,7},{7,3}};  
+
+  DisjointSets d;
+
+  d.bfs(3,8,8,edges);
+
+  for (int i = 0; i < 8; i++)
+    std::cout << "Distance to vertex " << i
+              << " is " << d.distance[i] << std::endl;
+
+// Should print
+// Distance to vertex 0 is 3
+// Distance to vertex 1 is 2
+// Distance to vertex 2 is 1
+// Distance to vertex 3 is 0
+// Distance to vertex 4 is 1
+// Distance to vertex 5 is 2
+// Distance to vertex 6 is 2
+// Distance to vertex 7 is 1
+
+
+  return 0;
+}
+
+```
